@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rara Cosmetics</title>
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* RESET & BASE STYLES */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --primary: #F8BBD0;
+      --secondary: #FCE4EC;
+      --accent: #EC407A;
+      --accent-dark: #D81B60;
+      --bg: #FFF9FB;
+      --surface: #FFFFFF;
+      --text: #444444;
+      --text-light: #888888;
+      --shadow: 0 4px 20px rgba(236, 64, 122, 0.08);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+      --radius: 16px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      box-shadow: 0 0 30px rgba(0,0,0,0.05);
+      padding-bottom: 70px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      outline: none;
+      font-family: inherit;
+    }
+
+    input, select, textarea {
+      font-family: inherit;
+      outline: none;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* TOAST NOTIFICATION */
+    #toast {
+      position: fixed;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface);
+      color: var(--text);
+      border-left: 4px solid var(--accent);
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      z-index: 9999;
+      font-size: 13px;
+      font-weight: 600;
+      transition: top 0.4s ease;
+      width: 90%;
+      max-width: 400px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #toast.show {
+      top: 20px;
+    }
+
+    /* HEADER */
+    .header {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .header .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+    .header .role-badge {
+      font-size: 10px;
+      background: var(--secondary);
+      color: var(--accent);
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+      margin-left: 6px;
+      text-transform: uppercase;
+    }
+
+    /* BOTTOM NAVIGATION */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: var(--surface);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      z-index: 100;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-light);
+      background: none;
+      position: relative;
+    }
+    .nav-item.active {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .nav-item i {
+      margin-bottom: 4px;
+      width: 20px;
+      height: 20px;
+    }
+    .badge {
+      position: absolute;
+      top: -2px;
+      right: 4px;
+      background: var(--accent);
+      color: white;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    /* VIEWS */
+    .view {
+      display: none;
+      padding: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+    .view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ONBOARDING / LOGIN OVERLAY */
+    #onboarding-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .onboarding-card {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow);
+    }
+    .role-tabs {
+      display: flex;
+      background: var(--secondary);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 20px;
+    }
+    .role-btn {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      background: transparent;
+      transition: 0.3s;
+    }
+    .role-btn.active {
+      background: var(--surface);
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+    .step-indicator {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .step-dot {
+      flex: 1;
+      height: 4px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+    .step-dot.active {
+      background: var(--accent);
+    }
+
+    /* FORM COMPONENTS */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid #f0f0f0;
+      background: #FAFAFA;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px var(--secondary);
+    }
+
+    /* BUTTONS */
+    .btn {
+      width: 100%;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary:active {
+      background: var(--accent-dark);
+    }
+    .btn-secondary {
+      background: var(--secondary);
+      color: var(--accent);
+    }
+    .btn-outline {
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+    }
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    /* HOME COMPONENTS */
+    .hero-banner {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: var(--radius);
+      padding: 20px;
+      color: white;
+      margin-bottom: 20px;
+    }
+    .hero-banner h2 { font-size: 20px; margin-bottom: 4px; }
+    .hero-banner p { font-size: 12px; opacity: 0.9; }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .horizontal-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scrollbar-width: none;
+    }
+    .horizontal-scroll::-webkit-scrollbar { display: none; }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .product-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 10px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .product-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+    .product-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .product-price {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .product-meta {
+      font-size: 10px;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .product-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 6px;
+    }
+
+    /* PRODUCT DETAIL VIEW */
+    .detail-img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+    .variant-group {
+      margin: 14px 0;
+    }
+    .variant-group label {
+      font-size: 12px;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .variant-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .variant-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid #e0e0e0;
+      background: var(--surface);
+      font-size: 12px;
+    }
+    .variant-btn.selected {
+      border-color: var(--accent);
+      background: var(--secondary);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* CART & CHECKOUT */
+    .cart-item {
+      display: flex;
+      gap: 12px;
+      background: var(--surface);
+      padding: 12px;
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .cart-item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .cart-info {
+      flex: 1;
+    }
+    .cart-title { font-size: 13px; font-weight: 600; }
+    .cart-variant { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
+    .qty-cnt {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .qty-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--secondary);
+      color: var(--accent);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .summary-card {
+      background: var(--surface);
+      padding: 16px;
+      border-radius: var(--radius);
+      margin-top: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .summary-row.total {
+      font-weight: 700;
+      font-size: 15px;
+      border-top: 1px dashed #eee;
+      padding-top: 8px;
+      color: var(--accent);
+    }
+
+    /* PROFILE & ORDERS */
+    .profile-card {
+      background: var(--surface);
+      padding: 20px;
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+    .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 8px;
+      border: 2px solid var(--primary);
+    }
+
+    .timeline {
+      display: flex;
+      justify-content: space-between;
+      margin: 16px 0;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: #eee;
+      z-index: 1;
+    }
+    .timeline-step {
+      position: relative;
+      z-index: 2;
+      background: var(--bg);
+      padding: 0 4px;
+      text-align: center;
+      font-size: 10px;
+    }
+    .timeline-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 4px;
+    }
+    .timeline-step.active .timeline-icon {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* ADMIN TABS & DASHBOARD */
+    .admin-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .admin-tab-btn {
+      padding: 10px 4px;
+      background: var(--surface);
+      border: 1px solid #eee;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: 0.2s;
+    }
+    .admin-tab-btn.active {
+      background: var(--secondary);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .report-subtabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .subtab-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      background: #f0f0f0;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+    .subtab-btn.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: var(--surface);
+      padding: 20px;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 360px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast"><i data-feather="info"></i> <span id="toast-text">Pesan</span></div>
+
+  <!-- HEADER STICKY -->
+  <header class="header">
+    <div style="display: flex; align-items: center;">
+      <span class="logo">Rara.</span>
+      <span class="role-badge" id="header-role-badge">Pelanggan</span>
+    </div>
+    <div id="header-right">
+      <button onclick="switchView('cart')" style="background:none; position:relative;">
+        <i data-feather="shopping-bag" style="color:var(--text)"></i>
+        <span class="badge" id="cart-badge" style="display:none;">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ONBOARDING & LOGIN OVERLAY -->
+  <div id="onboarding-overlay">
+    <div class="onboarding-card">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h2 style="color: var(--accent);">Rara Cosmetics</h2>
+        <p style="font-size: 12px; color: var(--text-light);">Selamat Datang di Beauty & Skincare Store</p>
+      </div>
+
+      <!-- ROLE SELECTOR -->
+      <div class="role-tabs">
+        <button class="role-btn active" id="btn-role-customer" onclick="setRole('customer')">Pelanggan</button>
+        <button class="role-btn" id="btn-role-admin" onclick="setRole('admin')">Admin</button>
+      </div>
+
+      <!-- CUSTOMER MULTI-STEP ONBOARDING -->
+      <div id="customer-flow">
+        <div class="step-indicator">
+          <div class="step-dot active" id="dot-1"></div>
+          <div class="step-dot" id="dot-2"></div>
+          <div class="step-dot" id="dot-3"></div>
+        </div>
+
+        <form id="form-customer" onsubmit="handleCustomerSubmit(event)">
+          <!-- STEP 1 -->
+          <div id="step-1">
+            <div class="form-group">
+              <label>Email Pengguna</label>
+              <input type="email" id="cust-email" class="form-control" placeholder="contoh@gmail.com" required>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="nextStep(2)">Lanjut <i data-feather="arrow-right"></i></button>
+          </div>
+
+          <!-- STEP 2 -->
+          <div id="step-2" style="display: none;">
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" id="cust-username" class="form-control" placeholder="Username Anda" required>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="cust-password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-secondary" onclick="nextStep(1)">Kembali</button>
+              <button type="button" class="btn btn-primary" onclick="nextStep(3)">Lanjut</button>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div id="step-3" style="display: none;">
+            <div class="form-group">
+              <label>Nomor Telepon</label>
+              <input type="tel" id="cust-phone" class="form-control" placeholder="08123456789" required>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-secondary" onclick="nextStep(2)">Kembali</button>
+              <button type="submit" class="btn btn-primary">Mulai Belanja</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- ADMIN LOGIN FLOW -->
+      <div id="admin-flow" style="display: none;">
+        <form onsubmit="handleAdminSubmit(event)">
+          <div class="form-group">
+            <label>Username Admin</label>
+            <input type="text" id="admin-username" class="form-control" value="admin" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="admin-password" class="form-control" value="admin123" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Masuk Portal Admin</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- VIEW 1: HOME (CUSTOMER) -->
+  <div id="view-home" class="view active">
+    <div class="hero-banner">
+      <h2>Glow Up Bersama Rara</h2>
+      <p>Koleksi kosmetik & skincare original terlengkap!</p>
+    </div>
+
+    <!-- BEST SELLER HORIZONTAL -->
+    <div class="section-title">
+      <span>Best Seller ✨</span>
+    </div>
+    <div class="horizontal-scroll" id="best-seller-container">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- KOLEKSI PILIHAN GRID -->
+    <div class="section-title" style="margin-top: 16px;">
+      <span>Koleksi Pilihan</span>
+    </div>
+    <div class="product-grid" id="product-grid-container">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- VIEW 2: PRODUCT DETAIL -->
+  <div id="view-detail" class="view">
+    <button onclick="switchView('home')" class="btn btn-secondary btn-sm" style="margin-bottom: 12px; width: auto;">
+      <i data-feather="arrow-left"></i> Kembali
+    </button>
+    <div id="detail-content">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- VIEW 3: CART & CHECKOUT -->
+  <div id="view-cart" class="view">
+    <h3 style="margin-bottom: 12px;">Keranjang Belanja</h3>
+    <div id="cart-list">
+      <!-- Injected by JS -->
+    </div>
+
+    <div class="summary-card" id="cart-summary">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- VIEW 4: ORDERS (STATUS PESANAN) -->
+  <div id="view-orders" class="view">
+    <h3 style="margin-bottom: 12px;">Status Pesanan Anda</h3>
+    <div id="orders-list">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- VIEW 5: PROFILE (CUSTOMER) -->
+  <div id="view-profile" class="view">
+    <div class="profile-card">
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="avatar" alt="Profile">
+      <h3 id="profile-name">Nama User</h3>
+      <span class="role-badge" style="display:inline-block; margin-top:4px;">Beauty Member</span>
+      
+      <div style="display: flex; justify-content: space-around; margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px;">
+        <div>
+          <div style="font-weight: 700; color: var(--accent);" id="prof-order-count">0</div>
+          <div style="font-size: 11px; color: var(--text-light);">Pesanan</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card" style="margin-top: 0;">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="text" id="prof-email" class="form-control" readonly>
+      </div>
+      <div class="form-group">
+          <label>Nomor Telepon</label>
+        <input type="text" id="prof-phone" class="form-control" readonly>
+      </div>
+      <div class="form-group">
+        <label>Alamat Pengiriman</label>
+        <textarea id="prof-address" class="form-control" rows="2">Jl. Beauty Mawar No. 12, Jakarta</textarea>
+      </div>
+      <button class="btn btn-outline btn-sm" style="margin-bottom: 8px;" onclick="showToast('Alamat berhasil diperbarui!')">Simpan Profil</button>
+      <button class="btn btn-secondary btn-sm" style="color: red;" onclick="openModal('logout-modal')">Logout</button>
+    </div>
+  </div>
+
+  <!-- VIEW 6: ADMIN DASHBOARD (BERDASAARKAN MINDMAP) -->
+  <div id="view-admin" class="view">
+    <h3 style="margin-bottom: 14px;">Dashboard Admin</h3>
+
+    <!-- ADMIN MENU GRID -->
+    <div class="admin-menu-grid">
+      <button class="admin-tab-btn active" id="tab-btn-input" onclick="switchAdminSection('input')">
+        <i data-feather="plus-circle"></i>
+        <span>Input Barang</span>
+      </button>
+      <button class="admin-tab-btn" id="tab-btn-view" onclick="switchAdminSection('view')">
+        <i data-feather="grid"></i>
+        <span>View Barang</span>
+      </button>
+      <button class="admin-tab-btn" id="tab-btn-report" onclick="switchAdminSection('report')">
+        <i data-feather="file-text"></i>
+        <span>Laporan</span>
+      </button>
+    </div>
+
+    <!-- SECTION 1: INPUT BARANG -->
+    <div id="admin-sec-input" class="summary-card" style="margin-top: 0;">
+      <h4 style="margin-bottom: 12px;">Form Input Barang Baru</h4>
+      <form onsubmit="handleAddProduct(event)">
+        <div class="form-group">
+          <label>Nama Barang</label>
+          <input type="text" id="adm-p-name" class="form-control" placeholder="Contoh: Cushion Glow" required>
+        </div>
+        <div class="form-group">
+          <label>Harga (Rp)</label>
+          <input type="number" id="adm-p-price" class="form-control" placeholder="120000" required>
+        </div>
+        <div class="form-group">
+          <label>URL Gambar Barang</label>
+          <input type="url" id="adm-p-img" class="form-control" placeholder="https://..." required>
+        </div>
+        <div class="form-group">
+          <label>Variasi Warna (Pisahkan koma)</label>
+          <input type="text" id="adm-p-shades" class="form-control" placeholder="Vanilla, Honey, Sand" required>
+        </div>
+        <div class="form-group">
+          <label>Variasi Ukuran (Pisahkan koma)</label>
+          <input type="text" id="adm-p-sizes" class="form-control" placeholder="15 g, 30 g" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">+ Simpan Ke Katalog</button>
+      </form>
+    </div>
+
+    <!-- SECTION 2: VIEW BARANG -->
+    <div id="admin-sec-view" class="summary-card" style="margin-top: 0; display: none;">
+      <h4 style="margin-bottom: 12px;">Daftar Katalog Barang (${products.length})</h4>
+      <div id="admin-product-list">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- SECTION 3: LAPORAN (HARIAN, BULANAN, TAHUNAN) -->
+    <div id="admin-sec-report" class="summary-card" style="margin-top: 0; display: none;">
+      <h4 style="margin-bottom: 10px;">Laporan Penjualan</h4>
+      
+      <!-- REPORT SUB-TABS -->
+      <div class="report-subtabs">
+        <button class="subtab-btn active" id="subtab-daily" onclick="switchReportTab('daily')">Harian</button>
+        <button class="subtab-btn" id="subtab-monthly" onclick="switchReportTab('monthly')">Bulanan</button>
+        <button class="subtab-btn" id="subtab-yearly" onclick="switchReportTab('yearly')">Tahunan</button>
+      </div>
+
+      <!-- REPORT CONTENT DISPLAY -->
+      <div id="report-content">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <button class="btn btn-secondary btn-sm" style="margin-top: 16px; color: red;" onclick="openModal('logout-modal')">Logout Admin</button>
+  </div>
+
+  <!-- BOTTOM NAVIGATION BAR -->
+  <nav class="bottom-nav" id="customer-nav">
+    <button class="nav-item active" onclick="switchView('home')">
+      <i data-feather="home"></i>
+      <span>Beranda</span>
+    </button>
+    <button class="nav-item" onclick="switchView('orders')">
+      <i data-feather="shopping-bag"></i>
+      <span>Pesanan</span>
+    </button>
+    <button class="nav-item" onclick="switchView('profile')">
+      <i data-feather="user"></i>
+      <span>Profil</span>
+    </button>
+  </nav>
+
+  <!-- LOGOUT MODAL -->
+  <div class="modal" id="logout-modal">
+    <div class="modal-content">
+      <h4 style="margin-bottom: 8px;">Konfirmasi Logout</h4>
+      <p style="font-size: 13px; color: var(--text-light); margin-bottom: 16px;">Apakah Anda yakin ingin keluar? Seluruh data sesi saat ini akan direset.</p>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('logout-modal')">Batal</button>
+        <button class="btn btn-primary btn-sm" onclick="performLogout()">Ya, Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    // DATA INITIALIZATION (10 Kosmetik Lengkap)
+    let products = [
+      {
+        id: 1,
+        name: "Cushion Glow Cushion",
+        price: 139000,
+        rating: 4.9,
+        sold: 1250,
+        image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500",
+        desc: "Cushion lightweight dengan hasil akhir glowing natural, menutupi noda hitam dan tahan 12 jam.",
+        shades: ["01 Light Ivory", "02 Natural Beige", "03 Warm Sand"],
+        sizes: ["15 g"],
+        isBestSeller: true
+      },
+      {
+        id: 2,
+        name: "Velvet Lip Cream",
+        price: 59000,
+        rating: 4.8,
+        sold: 3400,
+        image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500",
+        desc: "Lip cream matte bertekstur lembut tidak bikin bibir kering. Formula transferproof.",
+        shades: ["01 Rosewood", "02 Brick Red", "03 Nude Pink"],
+        sizes: ["4.5 ml"],
+        isBestSeller: true
+      },
+      {
+        id: 3,
+        name: "Glassy Lip Gloss",
+        price: 49000,
+        rating: 4.7,
+        sold: 890,
+        image: "https://images.unsplash.com/photo-1631214524020-7e18db9a8f92?w=500",
+        desc: "Lip gloss bening berkilau dengan efek plumping instant dan kandungan Vitamin E.",
+        shades: ["Clear Crystal", "Berry Pink"],
+        sizes: ["5 ml"],
+        isBestSeller: false
+      },
+      {
+        id: 4,
+        name: "Silky Compact Powder",
+        price: 75000,
+        rating: 4.8,
+        sold: 950,
+        image: "https://images.unsplash.com/photo-1590156546946-ce55a12a6a5d?w=500",
+        desc: "Bedak padat mengontrol minyak berlebih dan menyamarkan pori-pori seketika.",
+        shades: ["Translucent", "Natural", "Sand"],
+        sizes: ["12 g"],
+        isBestSeller: true
+      },
+      {
+        id: 5,
+        name: "Cheek Flush Blush On",
+        price: 52000,
+        rating: 4.9,
+        sold: 670,
+        image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=500",
+        desc: "Blush on perona pipi mudah dibaurkan dengan pigmen warna lembut dan tahan lama.",
+        shades: ["Peach Coral", "Soft Pink"],
+        sizes: ["8 g"],
+        isBestSeller: false
+      },
+      {
+        id: 6,
+        name: "Volume Mascara Waterproof",
+        price: 68000,
+        rating: 4.8,
+        sold: 1100,
+        image: "https://images.unsplash.com/photo-1631214500115-598fc2cb8d2d?w=500",
+        desc: "Mascara melentikkan dan menebalkan bulu mata tanpa menggumpal.",
+        shades: ["Midnight Black"],
+        sizes: ["8 ml"],
+        isBestSeller: true
+      },
+      {
+        id: 7,
+        name: "Eyeshadow Palette 9 Color",
+        price: 115000,
+        rating: 4.9,
+        sold: 520,
+        image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500",
+        desc: "Palette eyeshadow 9 warna kombinasi matte dan shimmer yang highly pigmented.",
+        shades: ["Warm Sunset", "Rose Garden"],
+        sizes: ["18 g"],
+        isBestSeller: false
+      },
+      {
+        id: 8,
+        name: "Hydrating Sunscreen SPF50",
+        price: 85000,
+        rating: 4.9,
+        sold: 2100,
+        image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500",
+        desc: "Tabur surya tanpa whitecast, ringan seperti air dan memberikan efek hidrasi.",
+        shades: ["Invisible Finish"],
+        sizes: ["30 ml", "50 ml"],
+        isBestSeller: true
+      },
+      {
+        id: 9,
+        name: "Brightening Face Serum",
+        price: 120000,
+        rating: 4.9,
+        sold: 1800,
+        image: "https://images.unsplash.com/photo-1608248597260-2fe84f23b7e4?w=500",
+        desc: "Serum pencerah wajah mencerahkan flek hitam dan meratakan warna kulit.",
+        shades: ["All Skin Types"],
+        sizes: ["20 ml", "30 ml"],
+        isBestSeller: false
+      },
+      {
+        id: 10,
+        name: "Deep Cleansing Micellar Water",
+        price: 45000,
+        rating: 4.7,
+        sold: 1400,
+        image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=500",
+        desc: "Pembersih make up waterproof dan kotoran tanpa rasa perih di mata.",
+        shades: ["Gentle Cleansing"],
+        sizes: ["100 ml", "250 ml"],
+        isBestSeller: false
+      }
+    ];
+
+
+    // DUMMY INITIAL TRANSACTIONS FOR ADMIN REPORTS
+    let orders = [
+      {
+        id: "#RRC-849201",
+        items: [{ name: "Cushion Glow Cushion", shade: "01 Light Ivory", size: "15 g", qty: 1, price: 139000 }],
+        total: 159000,
+        status: "Selesai",
+        date: "2026-08-07"
+      },
+      {
+        id: "#RRC-302194",
+        items: [{ name: "Velvet Lip Cream", shade: "02 Brick Red", size: "4.5 ml", qty: 2, price: 59000 }],
+        total: 138000,
+        status: "Selesai",
+        date: "2026-08-01"
+      },
+      {
+        id: "#RRC-104928",
+        items: [{ name: "Hydrating Sunscreen SPF50", shade: "Invisible Finish", size: "30 ml", qty: 1, price: 85000 }],
+        total: 105000,
+        status: "Selesai",
+        date: "2026-07-15"
+      }
+    ];
+
+    // STATE MANAGEMENT
+    let currentUser = null;
+    let selectedRole = 'customer';
+    let currentStep = 1;
+    let cart = [];
+    let selectedProduct = null;
+    let selectedShade = "";
+    let selectedSize = "";
+    let activeReportTab = 'daily';
+
+    // INITIALIZATION
+    window.onload = () => {
+      feather.replace();
+      renderProducts();
+    };
+
+    // TOAST NOTIFICATION
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // ONBOARDING & ROLE SWITCHING
+    function setRole(role) {
+      selectedRole = role;
+      document.getElementById('btn-role-customer').classList.toggle('active', role === 'customer');
+      document.getElementById('btn-role-admin').classList.toggle('active', role === 'admin');
+      
+      document.getElementById('customer-flow').style.display = role === 'customer' ? 'block' : 'none';
+      document.getElementById('admin-flow').style.display = role === 'admin' ? 'block' : 'none';
+    }
+
+    function nextStep(step) {
+      if (step === 2 && !document.getElementById('cust-email').checkValidity()) {
+        showToast('Masukkan email yang valid');
+        return;
+      }
+      if (step === 3 && (!document.getElementById('cust-username').value || !document.getElementById('cust-password').value)) {
+        showToast('Lengkapi Username & Password');
+        return;
+      }
+
+      currentStep = step;
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`step-${i}`).style.display = i === step ? 'block' : 'none';
+        document.getElementById(`dot-${i}`).classList.toggle('active', i <= step);
+      }
+    }
+
+    function handleCustomerSubmit(e) {
+      e.preventDefault();
+      currentUser = {
+        role: 'customer',
+        email: document.getElementById('cust-email').value,
+        username: document.getElementById('cust-username').value,
+        phone: document.getElementById('cust-phone').value,
+        address: "Jl. Beauty Mawar No. 12, Jakarta"
+      };
+
+      document.getElementById('onboarding-overlay').style.display = 'none';
+      document.getElementById('header-role-badge').innerText = 'Pelanggan';
+      document.getElementById('customer-nav').style.display = 'flex';
+      
+      document.getElementById('profile-name').innerText = currentUser.username;
+      document.getElementById('prof-email').value = currentUser.email;
+      document.getElementById('prof-phone').value = currentUser.phone;
+
+      showToast(`Selamat datang, ${currentUser.username}!`);
+      switchView('home');
+    }
+
+    function handleAdminSubmit(e) {
+      e.preventDefault();
+      const u = document.getElementById('admin-username').value;
+      const p = document.getElementById('admin-password').value;
+
+      if (u === 'admin' && p === 'admin123') {
+        currentUser = { role: 'admin', username: 'Admin Rara' };
+        document.getElementById('onboarding-overlay').style.display = 'none';
+        document.getElementById('header-role-badge').innerText = 'ADMIN';
+        document.getElementById('customer-nav').style.display = 'none';
+        
+        showToast('Login Admin Berhasil');
+        switchView('admin');
+        switchAdminSection('input');
+      } else {
+        showToast('Username/Password Admin Salah!');
+      }
+    }
+
+    // VIEW ROUTING
+    function switchView(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(`view-${viewId}`).classList.add('active');
+
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+      if (viewId === 'home') document.querySelectorAll('.nav-item')[0]?.classList.add('active');
+      if (viewId === 'orders') document.querySelectorAll('.nav-item')[1]?.classList.add('active');
+      if (viewId === 'profile') document.querySelectorAll('.nav-item')[2]?.classList.add('active');
+
+      if (viewId === 'cart') renderCart();
+      if (viewId === 'orders') renderOrders();
+
+      window.scrollTo(0,0);
+    }
+
+    // ADMIN NAVIGATION & SECTIONS
+    function switchAdminSection(sec) {
+      document.getElementById('tab-btn-input').classList.toggle('active', sec === 'input');
+      document.getElementById('tab-btn-view').classList.toggle('active', sec === 'view');
+      document.getElementById('tab-btn-report').classList.toggle('active', sec === 'report');
+
+      document.getElementById('admin-sec-input').style.display = sec === 'input' ? 'block' : 'none';
+      document.getElementById('admin-sec-view').style.display = sec === 'view' ? 'block' : 'none';
+      document.getElementById('admin-sec-report').style.display = sec === 'report' ? 'block' : 'none';
+
+      if (sec === 'view') renderAdminProducts();
+      if (sec === 'report') renderReportContent();
+    }
+
+    function switchReportTab(type) {
+      activeReportTab = type;
+      document.getElementById('subtab-daily').classList.toggle('active', type === 'daily');
+      document.getElementById('subtab-monthly').classList.toggle('active', type === 'monthly');
+      document.getElementById('subtab-yearly').classList.toggle('active', type === 'yearly');
+      renderReportContent();
+    }
+
+    // RENDER PRODUCTS
+    function renderProducts() {
+      const bestContainer = document.getElementById('best-seller-container');
+      const gridContainer = document.getElementById('product-grid-container');
+
+      bestContainer.innerHTML = '';
+      gridContainer.innerHTML = '';
+
+      products.forEach(p => {
+        if (p.isBestSeller) {
+          bestContainer.innerHTML += `
+            <div class="product-card" style="min-width: 140px; width: 140px;" onclick="openDetail(${p.id})">
+              <img src="${p.image}" alt="${p.name}">
+              <div class="product-title">${p.name}</div>
+              <div class="product-price">Rp${p.price.toLocaleString()}</div>
+              <div class="product-meta"><i data-feather="star" style="width:12px; fill:#FFC107; color:#FFC107;"></i> ${p.rating}</div>
+            </div>
+          `;
+        }
+
+        gridContainer.innerHTML += `
+          <div class="product-card">
+            <img src="${p.image}" alt="${p.name}" onclick="openDetail(${p.id})">
+            <div class="product-title" onclick="openDetail(${p.id})">${p.name}</div>
+            <div class="product-price">Rp${p.price.toLocaleString()}</div>
+            <div class="product-meta">
+              <i data-feather="star" style="width:12px; fill:#FFC107; color:#FFC107;"></i> ${p.rating} | Terjual ${p.sold}
+            </div>
+            <div class="product-actions">
+              <button class="btn btn-secondary btn-sm" style="flex:1;" onclick="quickAddToCart(${p.id})">+ Keranjang</button>
+            </div>
+          </div>
+        `;
+      });
+      feather.replace();
+    }
+
+    // PRODUCT DETAIL
+    function openDetail(id) {
+      selectedProduct = products.find(p => p.id === id);
+      selectedShade = selectedProduct.shades[0];
+      selectedSize = selectedProduct.sizes[0];
+
+      const detailContent = document.getElementById('detail-content');
+      detailContent.innerHTML = `
+        <img src="${selectedProduct.image}" class="detail-img">
+        <h2 style="font-size: 18px;">${selectedProduct.name}</h2>
+        <div style="font-size: 20px; font-weight: 700; color: var(--accent); margin: 6px 0;">
+          Rp${selectedProduct.price.toLocaleString()}
+        </div>
+        <div class="product-meta">
+          <i data-feather="star" style="width:14px; fill:#FFC107; color:#FFC107;"></i> ${selectedProduct.rating} | Terjual ${selectedProduct.sold}
+        </div>
+        <p style="font-size: 13px; color: var(--text-light); margin-top: 8px;">${selectedProduct.desc}</p>
+
+        <div class="variant-group">
+          <label>Pilih Variasi Warna/Shade:</label>
+          <div class="variant-options">
+            ${selectedProduct.shades.map((s, idx) => `
+              <button class="variant-btn ${idx === 0 ? 'selected' : ''}" onclick="selectVariant('shade', '${s}', this)">${s}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="variant-group">
+          <label>Pilih Ukuran/Berat:</label>
+          <div class="variant-options">
+            ${selectedProduct.sizes.map((sz, idx) => `
+              <button class="variant-btn ${idx === 0 ? 'selected' : ''}" onclick="selectVariant('size', '${sz}', this)">${sz}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="margin-top:20px; border-top:1px solid #eee; padding-top:12px;">
+          <h4 style="font-size:14px; margin-bottom:8px;">Ulasan Pelanggan</h4>
+          <div style="background:var(--surface); padding:10px; border-radius:10px; font-size:12px;">
+            <strong>Anisa N.</strong>
+            <div style="color:#FFC107;">★★★★★</div>
+            <p>Suka banget sama teksturnya! Pas di kulit dan ga bikin gatal. Next mau order lagi!</p>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:20px;">
+          <button class="btn btn-secondary" onclick="addToCartFromDetail()">+ Keranjang</button>
+          <button class="btn btn-primary" onclick="buyDirectFromDetail()">Beli Sekarang</button>
+        </div>
+      `;
+      feather.replace();
+      switchView('detail');
+    }
+
+    function selectVariant(type, value, btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      if (type === 'shade') selectedShade = value;
+      if (type === 'size') selectedSize = value;
+    }
+
+    // CART OPERATIONS
+    function quickAddToCart(productId) {
+      const p = products.find(prod => prod.id === productId);
+      addToCartItem(p, p.shades[0], p.sizes[0]);
+    }
+
+    function addToCartFromDetail() {
+      addToCartItem(selectedProduct, selectedShade, selectedSize);
+    }
+
+    function buyDirectFromDetail() {
+      addToCartItem(selectedProduct, selectedShade, selectedSize);
+      switchView('cart');
+    }
+
+    function addToCartItem(product, shade, size) {
+      const existing = cart.find(c => c.id === product.id && c.shade === shade && c.size === size);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          shade: shade,
+          size: size,
+          qty: 1,
+          selected: true
+        });
+      }
+      updateCartBadge();
+      showToast('Ditambahkan ke keranjang!');
+    }
+
+    function updateCartBadge() {
+      const totalItems = cart.reduce((acc, c) => acc + c.qty, 0);
+      const badge = document.getElementById('cart-badge');
+      if (totalItems > 0) {
+        badge.innerText = totalItems;
+        badge.style.display = 'block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function renderCart() {
+      const cartList = document.getElementById('cart-list');
+      const cartSummary = document.getElementById('cart-summary');
+
+      if (cart.length === 0) {
+        cartList.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-light);">Keranjang belanja Anda kosong.</div>`;
+        cartSummary.innerHTML = '';
+        return;
+      }
+
+      cartList.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+          <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleCartSelect(${index})">
+          <img src="${item.image}">
+          <div class="cart-info">
+            <div class="cart-title">${item.name}</div>
+            <div class="cart-variant">${item.shade} | ${item.size}</div>
+            <div style="font-weight:700; color:var(--accent);">Rp${item.price.toLocaleString()}</div>
+          </div>
+          <div class="qty-cnt">
+            <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+            <span style="font-size:12px; font-weight:600;">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      const subtotal = cart.filter(c => c.selected).reduce((acc, c) => acc + (c.price * c.qty), 0);
+      const shipping = subtotal > 0 ? 20000 : 0;
+      const grandTotal = subtotal + shipping;
+
+      cartSummary.innerHTML = `
+        <div class="summary-row">
+          <span>Subtotal Produk</span>
+          <span>Rp${subtotal.toLocaleString()}</span>
+        </div>
+        <div class="summary-row">
+          <span>Ongkos Kirim (Flat)</span>
+          <span>Rp${shipping.toLocaleString()}</span>
+        </div>
+        <div class="summary-row">
+          <span>Metode Pembayaran</span>
+          <strong>COD (Bayar di Tempat)</strong>
+        </div>
+        <div class="summary-row total">
+          <span>Total Pembayaran</span>
+          <span>Rp${grandTotal.toLocaleString()}</span>
+        </div>
+        <button class="btn btn-primary" style="margin-top:12px;" ${subtotal === 0 ? 'disabled' : ''} onclick="checkout()">
+          Checkout Sekarang
+        </button>
+      `;
+    }
+
+    function toggleCartSelect(index) {
+      cart[index].selected = !cart[index].selected;
+      renderCart();
+    }
+
+    function changeQty(index, delta) {
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+      }
+      updateCartBadge();
+      renderCart();
+    }
+
+    // CHECKOUT & ORDERS
+    function checkout() {
+      const selectedItems = cart.filter(c => c.selected);
+      if (selectedItems.length === 0) {
+        showToast('Pilih minimal satu produk untuk checkout!');
+        return;
+      }
+
+      const orderId = '#RRC-' + Math.floor(100000 + Math.random() * 900000);
+      const subtotal = selectedItems.reduce((acc, c) => acc + (c.price * c.qty), 0);
+      const grandTotal = subtotal + 20000;
+      const todayISO = new Date().toISOString().split('T')[0];
+
+      const newOrder = {
+        id: orderId,
+        items: [...selectedItems],
+        total: grandTotal,
+        status: 'Dikemas',
+        date: todayISO
+      };
+
+      orders.unshift(newOrder);
+      cart = cart.filter(c => !c.selected);
+      updateCartBadge();
+
+      document.getElementById('prof-order-count').innerText = orders.length;
+
+      showToast('Pesanan berhasil dibuat!');
+      switchView('orders');
+    }
+
+    function renderOrders() {
+      const container = document.getElementById('orders-list');
+      if (orders.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-light);">Belum ada riwayat pesanan.</div>`;
+        return;
+      }
+
+      container.innerHTML = orders.map(ord => `
+        <div class="summary-card" style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:8px;">
+            <strong>${ord.id}</strong>
+            <span style="color:var(--accent); font-weight:600;">${ord.status}</span>
+          </div>
+
+          <div class="timeline">
+            <div class="timeline-step ${ord.status === 'Dikemas' || ord.status === 'Dikirim' || ord.status === 'Selesai' ? 'active' : ''}">
+              <div class="timeline-icon"><i data-feather="box" style="width:12px;"></i></div>
+              Dikemas
+            </div>
+            <div class="timeline-step ${ord.status === 'Dikirim' || ord.status === 'Selesai' ? 'active' : ''}">
+              <div class="timeline-icon"><i data-feather="truck" style="width:12px;"></i></div>
+              Dikirim
+            </div>
+            <div class="timeline-step ${ord.status === 'Selesai' ? 'active' : ''}">
+              <div class="timeline-icon"><i data-feather="check" style="width:12px;"></i></div>
+              Selesai
+            </div>
+          </div>
+
+          <div style="border-top:1px solid #eee; padding-top:8px;">
+            ${ord.items.map(i => `
+              <div style="font-size:12px; display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span>${i.name} (${i.shade}, ${i.size}) x${i.qty}</span>
+                <span>Rp${(i.price * i.qty).toLocaleString()}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="font-size:13px; font-weight:700; text-align:right; margin-top:8px; color:var(--accent);">
+            Total: Rp${ord.total.toLocaleString()}
+          </div>
+        </div>
+      `).join('');
+      feather.replace();
+    }
+
+
+    // ADMIN FEATURES (INPUT BARANG, VIEW BARANG, LAPORAN HARIAN/BULANAN/TAHUNAN)
+    function handleAddProduct(e) {
+      e.preventDefault();
+      const newProd = {
+        id: Date.now(),
+        name: document.getElementById('adm-p-name').value,
+        price: parseInt(document.getElementById('adm-p-price').value),
+        rating: 5.0,
+        sold: 0,
+        image: document.getElementById('adm-p-img').value,
+        desc: "Produk kosmetik kualitas premium dari Rara Cosmetics.",
+        shades: document.getElementById('adm-p-shades').value.split(',').map(s => s.trim()),
+        sizes: document.getElementById('adm-p-sizes').value.split(',').map(s => s.trim()),
+        isBestSeller: false
+      };
+
+      products.unshift(newProd);
+      renderProducts();
+      showToast('Barang berhasil dimasukkan ke katalog!');
+      e.target.reset();
+      switchAdminSection('view');
+    }
+
+    function renderAdminProducts() {
+      const container = document.getElementById('admin-product-list');
+      container.innerHTML = products.map((p, idx) => `
+        <div style="display:flex; gap:10px; border-bottom:1px solid #eee; padding:8px 0; align-items:center;">
+          <img src="${p.image}" style="width:40px; height:40px; border-radius:6px; object-fit:cover;">
+          <div style="flex:1;">
+            <div style="font-size:12px; font-weight:600;">${p.name}</div>
+            <div style="font-size:11px; color:var(--accent);">Rp${p.price.toLocaleString()}</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" style="color:red; width:auto; padding:4px 8px;" onclick="deleteProduct(${p.id})">Hapus</button>
+        </div>
+      `).join('');
+    }
+
+    function deleteProduct(id) {
+      products = products.filter(p => p.id !== id);
+      renderProducts();
+      renderAdminProducts();
+      showToast('Barang berhasil dihapus!');
+    }
+
+    function renderReportContent() {
+      const container = document.getElementById('report-content');
+      const today = new Date().toISOString().split('T')[0];
+      const currentMonth = today.substring(0, 7);
+      const currentYear = today.substring(0, 4);
+
+      let filteredOrders = [];
+      let labelText = "";
+
+      if (activeReportTab === 'daily') {
+        labelText = "Laporan Harian (Hari Ini)";
+        filteredOrders = orders.filter(o => o.date === today);
+      } else if (activeReportTab === 'monthly') {
+        labelText = "Laporan Bulanan (Bulan Ini)";
+        filteredOrders = orders.filter(o => o.date.startsWith(currentMonth));
+      } else if (activeReportTab === 'yearly') {
+        labelText = "Laporan Tahunan (Tahun Ini)";
+        filteredOrders = orders.filter(o => o.date.startsWith(currentYear));
+      }
+
+      const totalRevenue = filteredOrders.reduce((acc, o) => acc + o.total, 0);
+
+      container.innerHTML = `
+        <div style="background:var(--bg); padding:12px; border-radius:12px; margin-bottom:12px;">
+          <div style="font-size:11px; color:var(--text-light);">${labelText}</div>
+          <div style="font-size:18px; font-weight:700; color:var(--accent);">Rp${totalRevenue.toLocaleString()}</div>
+          <div style="font-size:11px; color:var(--text); margin-top:2px;">Total ${filteredOrders.length} Transaksi Selesai</div>
+        </div>
+
+        <div style="font-size:12px; font-weight:600; margin-bottom:6px;">Rincian Transaksi:</div>
+        ${filteredOrders.length === 0 ? `<div style="font-size:11px; color:var(--text-light); text-align:center; padding:10px;">Tidak ada transaksi pada periode ini.</div>` : 
+          filteredOrders.map(o => `
+            <div style="border-bottom:1px solid #eee; padding:6px 0; font-size:11px;">
+              <div style="display:flex; justify-content:space-between;">
+                <strong>${o.id}</strong>
+                <span>${o.date}</span>
+              </div>
+              <div style="color:var(--accent); font-weight:600;">Rp${o.total.toLocaleString()}</div>
+            </div>
+          `).join('')
+        }
+      `;
+    }
+
+    // MODAL & LOGOUT
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function performLogout() {
+      closeModal('logout-modal');
+      currentUser = null;
+      cart = [];
+      updateCartBadge();
+      
+      document.getElementById('form-customer').reset();
+      nextStep(1);
+
+      document.getElementById('onboarding-overlay').style.display = 'flex';
+      switchView('home');
+      showToast('Berhasil logout');
+    }
+  </script>
+</body>
+</html>
