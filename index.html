@@ -1,1 +1,812 @@
-.
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Rara Cosmetics - Premium Beauty & Skincare</title>
+  <!-- Font & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #F8BBD0;
+      --secondary: #FCE4EC;
+      --accent: #EC407A;
+      --accent-hover: #D81B60;
+      --bg: #FFF9FB;
+      --surface: #FFFFFF;
+      --text: #444444;
+      --text-muted: #888888;
+      --border: #F3E5F5;
+      --shadow: 0 8px 20px rgba(236, 64, 122, 0.08);
+      --shadow-sm: 0 4px 10px rgba(0,0,0,0.03);
+      --radius: 16px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+      padding-bottom: 70px;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    /* Toast Notification */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      width: 90%;
+      max-width: 400px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--surface);
+      color: var(--text);
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--accent);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      animation: slideDown 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+
+    /* Header Sticky */
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .icon-btn {
+      background: var(--secondary);
+      border: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.92);
+    }
+
+    .badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: var(--accent);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: var(--surface);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.03);
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      font-weight: 500;
+      gap: 3px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 20%;
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .nav-item i {
+      font-size: 1.15rem;
+    }
+
+    /* Views */
+    .view {
+      display: none;
+      padding: 16px;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Modal / Onboarding Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 24px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .role-switcher {
+      display: flex;
+      background: var(--secondary);
+      padding: 4px;
+      border-radius: 30px;
+      margin-bottom: 20px;
+    }
+
+    .role-btn {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      background: transparent;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .role-btn.active {
+      background: var(--surface);
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: var(--accent);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+    }
+
+    /* Wizard Steps */
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all 0.3s;
+    }
+
+    .step-dot.active {
+      width: 24px;
+      border-radius: 10px;
+      background: var(--accent);
+    }
+
+    /* Home View Elements */
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 20px 0 12px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .horizontal-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin: 0 -16px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .product-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 12px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .horizontal-scroll .product-card {
+      min-width: 160px;
+      max-width: 160px;
+    }
+
+    .grid-products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: calc(var(--radius) - 4px);
+      margin-bottom: 10px;
+      background: #f0f0f0;
+    }
+
+    .product-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-price {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .product-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .product-actions .btn {
+      padding: 8px;
+      font-size: 0.75rem;
+    }
+
+    /* Product Detail View */
+    .detail-img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+
+    .variant-section {
+      margin: 16px 0;
+    }
+
+    .variant-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .variant-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .variant-chip {
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: var(--surface);
+      transition: all 0.2s;
+    }
+
+    .variant-chip.active {
+      border-color: var(--accent);
+      background: var(--secondary);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .review-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .review-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    /* Cart View */
+    .cart-item {
+      display: flex;
+      gap: 12px;
+      background: var(--surface);
+      padding: 12px;
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+      align-items: center;
+    }
+
+    .cart-img {
+      width: 70px;
+      height: 70px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      border-radius: 6px;
+      padding: 2px 6px;
+    }
+
+    .qty-btn {
+      border: none;
+      background: transparent;
+      width: 22px;
+      height: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      color: var(--accent);
+    }
+
+    .cart-summary {
+      background: var(--surface);
+      padding: 16px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      margin-top: 16px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+    }
+
+    .summary-total {
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    /* Profile View */
+    .profile-card {
+      background: linear-gradient(135deg, var(--secondary), var(--surface));
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      margin: 0 auto 10px;
+      object-fit: cover;
+    }
+
+    .member-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-top: 4px;
+    }
+
+    .order-status-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .timeline {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: var(--border);
+      z-index: 1;
+    }
+
+    .timeline-step {
+      position: relative;
+      z-index: 2;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.7rem;
+    }
+
+    .timeline-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+      font-size: 0.75rem;
+    }
+
+    .timeline-step.completed .timeline-icon {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* Admin View */
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      border-left: 4px solid var(--accent);
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--secondary);
+      color: var(--accent);
+    }
+
+    /* Media Query for Larger Displays */
+    @media (min-width: 481px) {
+      .grid-products {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand-logo">
+      <i class="fa-solid fa-sparkles"></i>
+      <span>Rara Cosmetics</span>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="switchView('cart-view')">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="badge" id="cart-badge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ONBOARDING & LOGIN OVERLAY -->
+  <div id="auth-overlay" class="overlay">
+    <div class="modal-card">
+      <div class="role-switcher">
+        <button class="role-btn active" id="role-user-btn" onclick="setRole('user')">Pelanggan</button>
+        <button class="role-btn" id="role-admin-btn" onclick="setRole('admin')">Admin Store</button>
+      </div>
+
+      <!-- User Multi-step Wizard -->
+      <div id="user-wizard">
+        <div class="step-indicator">
+          <div class="step-dot active" id="dot-1"></div>
+          <div class="step-dot" id="dot-2"></div>
+          <div class="step-dot" id="dot-3"></div>
+        </div>
+
+        <form id="wizard-form" onsubmit="handleWizardNext(event)">
+          <!-- Step 1 -->
+          <div id="step-1" class="wizard-step">
+            <h3 style="margin-bottom:6px; color:var(--accent);">Selamat Datang! ✨</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">Masukkan email aktif Anda untuk mulai belanja.</p>
+            <div class="form-group">
+              <label>Alamat Email</label>
+              <input type="email" id="wiz-email" class="form-control" placeholder="contoh: rara@beauty.com" required>
+            </div>
+            <button type="submit" class="btn">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+
+          <!-- Step 2 -->
+          <div id="step-2" class="wizard-step" style="display: none;">
+            <h3 style="margin-bottom:6px; color:var(--accent);">Buat Akun</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">Tentukan nama pengguna & kata sandi Anda.</p>
+            <div class="form-group">
+              <label>Nama Pengguna</label>
+              <input type="text" id="wiz-username" class="form-control" placeholder="Nama Anda" required>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="wiz-password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+
+          <!-- Step 3 -->
+          <div id="step-3" class="wizard-step" style="display: none;">
+            <h3 style="margin-bottom:6px; color:var(--accent);">Lengkapi Data</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">Masukkan nomor telepon untuk konfirmasi pengiriman.</p>
+            <div class="form-group">
+              <label>Nomor Telepon</label>
+              <input type="tel" id="wiz-phone" class="form-control" placeholder="081234567890" required>
+            </div>
+            <button type="submit" class="btn">Selesaikan Registration ✨</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Admin Login Form -->
+      <div id="admin-login" style="display: none;">
+        <h3 style="margin-bottom:6px; color:var(--accent);">Login Admin</h3>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">Masuk ke dashboard kelola toko.</p>
+        <form onsubmit="handleAdminLogin(event)">
+          <div class="form-group">
+            <label>Username Admin</label>
+            <input type="text" id="admin-user" class="form-control" value="admin" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="admin-pass" class="form-control" value="admin123" required>
+          </div>
+          <button type="submit" class="btn">Masuk Admin <i class="fa-solid fa-right-to-bracket"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 1: HOME VIEW (PELANGGAN) -->
+  <div id="home-view" class="view active">
+    <!-- Banner Selamat Datang -->
+    <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 18px; border-radius: var(--radius); margin-bottom: 20px; color: #444;">
+      <h2 style="font-size: 1.1rem; color: var(--accent);">Glow Up Bersama Rara ✨</h2>
+      <p style="font-size: 0.8rem; margin-top: 4px;">Temukan rangkaian kosmetik terbaik untuk pesona cantik alamimu.</p>
+    </div>
+
+    <!-- Section Best Seller (Horizontal Scroll) -->
+    <div class="section-title">
+      <span>🔥 Produk Best Seller</span>
+    </div>
+    <div class="horizontal-scroll" id="bestseller-list"></div>
+
+    <!-- Section Koleksi Pilihan (Grid) -->
+    <div class="section-title">
+      <span>🛍️ Semua Koleksi</span>
+    </div>
+    <div class="grid-products" id="all-products-grid"></div>
+  </div>
+
+  <!-- VIEW 2: PRODUCT DETAIL VIEW -->
+  <div id="detail-view" class="view">
+    <button class="btn btn-secondary" onclick="switchView('home-view')" style="width: auto; padding: 6px 14px; margin-bottom: 12px;">
+      <i class="fa-solid fa-arrow-left"></i> Kembali
+    </button>
+    
+    <img id="detail-img" class="detail-img" src="" alt="Product">
+    <h2 id="detail-title" style="font-size: 1.2rem; margin-bottom: 4px.
