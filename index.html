@@ -740,6 +740,7 @@
     </div>
   </div>
 
+  
   <!-- VIEW 6: ADMIN DASHBOARD -->
   <div id="view-admin" class="view">
     <h3 style="margin-bottom: 12px;">Panel Admin Rara</h3>
@@ -749,4 +750,679 @@
       <form onsubmit="handleAddProduct(event)">
         <div class="form-group">
           <label>Nama Produk</label>
-          <input type="text" id
+          <input type="text" id="adm-p-name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Harga (Rp)</label>
+          <input type="number" id="adm-p-price" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>URL Gambar</label>
+          <input type="url" id="adm-p-img" class="form-control" placeholder="https://..." required>
+        </div>
+        <div class="form-group">
+          <label>Variasi Warna (Pisahkan dengan koma)</label>
+          <input type="text" id="adm-p-shades" class="form-control" placeholder="Vanilla, Honey, Sand" required>
+        </div>
+        <div class="form-group">
+          <label>Variasi Ukuran (Pisahkan dengan koma)</label>
+          <input type="text" id="adm-p-sizes" class="form-control" placeholder="30 ml, 50 ml" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Tambah Ke Katalog</button>
+      </form>
+    </div>
+
+    <div class="summary-card">
+      <h4 style="margin-bottom: 10px;">Kelola Pesanan Pelanggan</h4>
+      <div id="admin-orders-list">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <button class="btn btn-secondary btn-sm" style="margin-top: 16px; color: red;" onclick="openModal('logout-modal')">Logout Admin</button>
+  </div>
+
+  <!-- BOTTOM NAVIGATION BAR -->
+  <nav class="bottom-nav" id="customer-nav">
+    <button class="nav-item active" onclick="switchView('home')">
+      <i data-feather="home"></i>
+      <span>Beranda</span>
+    </button>
+    <button class="nav-item" onclick="switchView('orders')">
+      <i data-feather="shopping-bag"></i>
+      <span>Pesanan</span>
+    </button>
+    <button class="nav-item" onclick="switchView('profile')">
+      <i data-feather="user"></i>
+      <span>Profil</span>
+    </button>
+  </nav>
+
+  <!-- LOGOUT MODAL -->
+  <div class="modal" id="logout-modal">
+    <div class="modal-content">
+      <h4 style="margin-bottom: 8px;">Konfirmasi Logout</h4>
+      <p style="font-size: 13px; color: var(--text-light); margin-bottom: 16px;">Apakah Anda yakin ingin keluar? Seluruh data sesi saat ini akan direset.</p>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('logout-modal')">Batal</button>
+        <button class="btn btn-primary btn-sm" onclick="performLogout()">Ya, Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    // 1. DATA INITIALIZATION (10 Kosmetik Lengkap)
+    let products = [
+      {
+        id: 1,
+        name: "Cushion Glow Cushion",
+        price: 139000,
+        rating: 4.9,
+        sold: 1250,
+        image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500",
+        desc: "Cushion lightweight dengan hasil akhir glowing natural, menutupi noda hitam dan tahan 12 jam.",
+        shades: ["01 Light Ivory", "02 Natural Beige", "03 Warm Sand"],
+        sizes: ["15 g"],
+        isBestSeller: true
+      },
+      {
+        id: 2,
+        name: "Velvet Lip Cream",
+        price: 59000,
+        rating: 4.8,
+        sold: 3400,
+        image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500",
+        desc: "Lip cream matte bertekstur lembut tidak bikin bibir kering. Formula transferproof.",
+        shades: ["01 Rosewood", "02 Brick Red", "03 Nude Pink"],
+        sizes: ["4.5 ml"],
+        isBestSeller: true
+      },
+      {
+        id: 3,
+        name: "Glassy Lip Gloss",
+        price: 49000,
+        rating: 4.7,
+        sold: 890,
+        image: "https://images.unsplash.com/photo-1631214524020-7e18db9a8f92?w=500",
+        desc: "Lip gloss bening berkilau dengan efek plumping instant dan kandungan Vitamin E.",
+        shades: ["Clear Crystal", "Berry Pink"],
+        sizes: ["5 ml"],
+        isBestSeller: false
+      },
+      {
+        id: 4,
+        name: "Silky Compact Powder",
+        price: 75000,
+        rating: 4.8,
+        sold: 950,
+        image: "https://images.unsplash.com/photo-1590156546946-ce55a12a6a5d?w=500",
+        desc: "Bedak padat mengontrol minyak berlebih dan menyamarkan pori-pori seketika.",
+        shades: ["Translucent", "Natural", "Sand"],
+        sizes: ["12 g"],
+        isBestSeller: true
+      },
+      {
+        id: 5,
+        name: "Cheek Flush Blush On",
+        price: 52000,
+        rating: 4.9,
+        sold: 670,
+        image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=500",
+        desc: "Blush on perona pipi mudah dibaurkan dengan pigmen warna lembut dan tahan lama.",
+        shades: ["Peach Coral", "Soft Pink"],
+        sizes: ["8 g"],
+        isBestSeller: false
+      },
+      {
+        id: 6,
+        name: "Volume Mascara Waterproof",
+        price: 68000,
+        rating: 4.8,
+        sold: 1100,
+        image: "https://images.unsplash.com/photo-1631214500115-598fc2cb8d2d?w=500",
+        desc: "Mascara melentikkan dan menebalkan bulu mata tanpa menggumpal.",
+        shades: ["Midnight Black"],
+        sizes: ["8 ml"],
+        isBestSeller: true
+      },
+      {
+        id: 7,
+        name: "Eyeshadow Palette 9 Color",
+        price: 115000,
+        rating: 4.9,
+        sold: 520,
+        image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500",
+        desc: "Palette eyeshadow 9 warna kombinasi matte dan shimmer yang highly pigmented.",
+        shades: ["Warm Sunset", "Rose Garden"],
+        sizes: ["18 g"],
+        isBestSeller: false
+      },
+      {
+        id: 8,
+        name: "Hydrating Sunscreen SPF50",
+        price: 85000,
+        rating: 4.9,
+        sold: 2100,
+        image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500",
+        desc: "Tabur surya tanpa whitecast, ringan seperti air dan memberikan efek hidrasi.",
+        shades: ["Invisible Finish"],
+        sizes: ["30 ml", "50 ml"],
+        isBestSeller: true
+      },
+      {
+        id: 9,
+        name: "Brightening Face Serum",
+        price: 120000,
+        rating: 4.9,
+        sold: 1800,
+        image: "https://images.unsplash.com/photo-1608248597260-2fe84f23b7e4?w=500",
+        desc: "Serum pencerah wajah mencerahkan flek hitam dan meratakan warna kulit.",
+        shades: ["All Skin Types"],
+        sizes: ["20 ml", "30 ml"],
+        isBestSeller: false
+      },
+      {
+        id: 10,
+        name: "Deep Cleansing Micellar Water",
+        price: 45000,
+        rating: 4.7,
+        sold: 1400,
+        image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=500",
+        desc: "Pembersih make up waterproof dan kotoran tanpa rasa perih di mata.",
+        shades: ["Gentle Cleansing"],
+        sizes: ["100 ml", "250 ml"],
+        isBestSeller: false
+      }
+    ];
+
+    // STATE MANAGEMENT
+    let currentUser = null;
+    let selectedRole = 'customer';
+    let currentStep = 1;
+    let cart = [];
+    let orders = [];
+    let selectedProduct = null;
+    let selectedShade = "";
+    let selectedSize = "";
+
+    // INITIALIZATION
+    window.onload = () => {
+      feather.replace();
+      renderProducts();
+    };
+
+    // TOAST NOTIFICATION
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // ONBOARDING & ROLE SWITCHING
+    function setRole(role) {
+      selectedRole = role;
+      document.getElementById('btn-role-customer').classList.toggle('active', role === 'customer');
+      document.getElementById('btn-role-admin').classList.toggle('active', role === 'admin');
+      
+      document.getElementById('customer-flow').style.display = role === 'customer' ? 'block' : 'none';
+      document.getElementById('admin-flow').style.display = role === 'admin' ? 'block' : 'none';
+    }
+
+    function nextStep(step) {
+      if (step === 2 && !document.getElementById('cust-email').checkValidity()) {
+        showToast('Masukkan email yang valid');
+        return;
+      }
+      if (step === 3 && (!document.getElementById('cust-username').value || !document.getElementById('cust-password').value)) {
+        showToast('Lengkapi Username & Password');
+        return;
+      }
+
+      currentStep = step;
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`step-${i}`).style.display = i === step ? 'block' : 'none';
+        document.getElementById(`dot-${i}`).classList.toggle('active', i <= step);
+      }
+    }
+
+    function handleCustomerSubmit(e) {
+      e.preventDefault();
+      currentUser = {
+        role: 'customer',
+        email: document.getElementById('cust-email').value,
+        username: document.getElementById('cust-username').value,
+        phone: document.getElementById('cust-phone').value,
+        address: "Jl. Beauty Mawar No. 12, Jakarta"
+      };
+
+      document.getElementById('onboarding-overlay').style.display = 'none';
+      document.getElementById('header-role-badge').innerText = 'Pelanggan';
+      document.getElementById('customer-nav').style.display = 'flex';
+      
+      // Update Profile UI
+      document.getElementById('profile-name').innerText = currentUser.username;
+      document.getElementById('prof-email').value = currentUser.email;
+      document.getElementById('prof-phone').value = currentUser.phone;
+
+      showToast(`Selamat datang, ${currentUser.username}!`);
+      switchView('home');
+    }
+
+    function handleAdminSubmit(e) {
+      e.preventDefault();
+      const u = document.getElementById('admin-username').value;
+      const p = document.getElementById('admin-password').value;
+
+      if (u === 'admin' && p === 'admin123') {
+        currentUser = { role: 'admin', username: 'Admin Rara' };
+        document.getElementById('onboarding-overlay').style.display = 'none';
+        document.getElementById('header-role-badge').innerText = 'ADMIN';
+        document.getElementById('customer-nav').style.display = 'none';
+        
+        showToast('Login Admin Berhasil');
+        switchView('admin');
+        renderAdminOrders();
+      } else {
+        showToast('Username/Password Admin Salah!');
+      }
+    }
+
+    // VIEW ROUTING
+    function switchView(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(`view-${viewId}`).classList.add('active');
+
+      // Update Nav Class
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+      if (viewId === 'home') document.querySelectorAll('.nav-item')[0]?.classList.add('active');
+      if (viewId === 'orders') document.querySelectorAll('.nav-item')[1]?.classList.add('active');
+      if (viewId === 'profile') document.querySelectorAll('.nav-item')[2]?.classList.add('active');
+
+      if (viewId === 'cart') renderCart();
+      if (viewId === 'orders') renderOrders();
+      if (viewId === 'admin') renderAdminOrders();
+
+      window.scrollTo(0,0);
+    }
+
+    // RENDER PRODUCTS
+    function renderProducts() {
+      const bestContainer = document.getElementById('best-seller-container');
+      const gridContainer = document.getElementById('product-grid-container');
+
+      bestContainer.innerHTML = '';
+      gridContainer.innerHTML = '';
+
+      products.forEach(p => {
+        // Render Best Sellers
+        if (p.isBestSeller) {
+          bestContainer.innerHTML += `
+            <div class="product-card" style="min-width: 140px; width: 140px;" onclick="openDetail(${p.id})">
+              <img src="${p.image}" alt="${p.name}">
+              <div class="product-title">${p.name}</div>
+              <div class="product-price">Rp${p.price.toLocaleString()}</div>
+              <div class="product-meta"><i data-feather="star" style="width:12px; fill:#FFC107; color:#FFC107;"></i> ${p.rating}</div>
+            </div>
+          `;
+        }
+
+        // Render All Products Grid
+        gridContainer.innerHTML += `
+          <div class="product-card">
+            <img src="${p.image}" alt="${p.name}" onclick="openDetail(${p.id})">
+            <div class="product-title" onclick="openDetail(${p.id})">${p.name}</div>
+            <div class="product-price">Rp${p.price.toLocaleString()}</div>
+            <div class="product-meta">
+              <i data-feather="star" style="width:12px; fill:#FFC107; color:#FFC107;"></i> ${p.rating} | Terjual ${p.sold}
+            </div>
+            <div class="product-actions">
+              <button class="btn btn-secondary btn-sm" style="flex:1;" onclick="quickAddToCart(${p.id})">+ Keranjang</button>
+            </div>
+          </div>
+        `;
+      });
+      feather.replace();
+    }
+
+    // PRODUCT DETAIL
+    function openDetail(id) {
+      selectedProduct = products.find(p => p.id === id);
+      selectedShade = selectedProduct.shades[0];
+      selectedSize = selectedProduct.sizes[0];
+
+      const detailContent = document.getElementById('detail-content');
+      detailContent.innerHTML = `
+        <img src="${selectedProduct.image}" class="detail-img">
+        <h2 style="font-size: 18px;">${selectedProduct.name}</h2>
+        <div style="font-size: 20px; font-weight: 700; color: var(--accent); margin: 6px 0;">
+          Rp${selectedProduct.price.toLocaleString()}
+        </div>
+        <div class="product-meta">
+          <i data-feather="star" style="width:14px; fill:#FFC107; color:#FFC107;"></i> ${selectedProduct.rating} | Terjual ${selectedProduct.sold}
+        </div>
+        <p style="font-size: 13px; color: var(--text-light); margin-top: 8px;">${selectedProduct.desc}</p>
+
+        <!-- SHADES -->
+        <div class="variant-group">
+          <label>Pilih Variasi Warna/Shade:</label>
+          <div class="variant-options">
+            ${selectedProduct.shades.map((s, idx) => `
+              <button class="variant-btn ${idx === 0 ? 'selected' : ''}" onclick="selectVariant('shade', '${s}', this)">${s}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- SIZES -->
+        <div class="variant-group">
+          <label>Pilih Ukuran/Berat:</label>
+          <div class="variant-options">
+            ${selectedProduct.sizes.map((sz, idx) => `
+              <button class="variant-btn ${idx === 0 ? 'selected' : ''}" onclick="selectVariant('size', '${sz}', this)">${sz}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- REVIEWS -->
+        <div style="margin-top:20px; border-top:1px solid #eee; padding-top:12px;">
+          <h4 style="font-size:14px; margin-bottom:8px;">Ulasan Pelanggan</h4>
+          <div style="background:var(--surface); padding:10px; border-radius:10px; font-size:12px;">
+            <strong>Anisa N.</strong>
+            <div style="color:#FFC107;">★★★★★</div>
+            <p>Suka banget sama teksturnya! Pas di kulit dan ga bikin gatal. Next mau order lagi!</p>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:20px;">
+          <button class="btn btn-secondary" onclick="addToCartFromDetail()">+ Keranjang</button>
+          <button class="btn btn-primary" onclick="buyDirectFromDetail()">Beli Sekarang</button>
+        </div>
+      `;
+      feather.replace();
+      switchView('detail');
+    }
+
+    function selectVariant(type, value, btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      if (type === 'shade') selectedShade = value;
+      if (type === 'size') selectedSize = value;
+    }
+
+    // CART OPERATIONS
+    function quickAddToCart(productId) {
+      const p = products.find(prod => prod.id === productId);
+      addToCartItem(p, p.shades[0], p.sizes[0]);
+    }
+
+    function addToCartFromDetail() {
+      addToCartItem(selectedProduct, selectedShade, selectedSize);
+    }
+
+    function buyDirectFromDetail() {
+      addToCartItem(selectedProduct, selectedShade, selectedSize);
+      switchView('cart');
+    }
+
+    function addToCartItem(product, shade, size) {
+      const existing = cart.find(c => c.id === product.id && c.shade === shade && c.size === size);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          shade: shade,
+          size: size,
+          qty: 1,
+          selected: true
+        });
+      }
+      updateCartBadge();
+      showToast('Ditambahkan ke keranjang!');
+    }
+
+    function updateCartBadge() {
+      const totalItems = cart.reduce((acc, c) => acc + c.qty, 0);
+      const badge = document.getElementById('cart-badge');
+      if (totalItems > 0) {
+        badge.innerText = totalItems;
+        badge.style.display = 'block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function renderCart() {
+      const cartList = document.getElementById('cart-list');
+      const cartSummary = document.getElementById('cart-summary');
+
+      if (cart.length === 0) {
+        cartList.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-light);">Keranjang belanja Anda kosong.</div>`;
+        cartSummary.innerHTML = '';
+        return;
+      }
+
+      cartList.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+          <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleCartSelect(${index})">
+          <img src="${item.image}">
+          <div class="cart-info">
+            <div class="cart-title">${item.name}</div>
+            <div class="cart-variant">${item.shade} | ${item.size}</div>
+            <div style="font-weight:700; color:var(--accent);">Rp${item.price.toLocaleString()}</div>
+          </div>
+          <div class="qty-cnt">
+            <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+            <span style="font-size:12px; font-weight:600;">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Calculation
+      const subtotal = cart.filter(c => c.selected).reduce((acc, c) => acc + (c.price * c.qty), 0);
+      const shipping = subtotal > 0 ? 20000 : 0;
+      const grandTotal = subtotal + shipping;
+
+      cartSummary.innerHTML = `
+        <div class="summary-row">
+          <span>Subtotal Produk</span>
+          <span>Rp${subtotal.toLocaleString()}</span>
+        </div>
+        <div class="summary-row">
+          <span>Ongkos Kirim (Flat)</span>
+          <span>Rp${shipping.toLocaleString()}</span>
+        </div>
+        <div class="summary-row">
+          <span>Metode Pembayaran</span>
+          <strong>COD (Bayar di Tempat)</strong>
+        </div>
+        <div class="summary-row total">
+          <span>Total Pembayaran</span>
+          <span>Rp${grandTotal.toLocaleString()}</span>
+        </div>
+        <button class="btn btn-primary" style="margin-top:12px;" ${subtotal === 0 ? 'disabled' : ''} onclick="checkout()">
+          Checkout Sekarang
+        </button>
+      `;
+    }
+
+    function toggleCartSelect(index) {
+      cart[index].selected = !cart[index].selected;
+      renderCart();
+    }
+
+    function changeQty(index, delta) {
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+      }
+      updateCartBadge();
+      renderCart();
+    }
+
+
+    // CHECKOUT & ORDERS
+    function checkout() {
+      const selectedItems = cart.filter(c => c.selected);
+      if (selectedItems.length === 0) {
+        showToast('Pilih minimal satu produk untuk checkout!');
+        return;
+      }
+
+      const orderId = '#RRC-' + Math.floor(100000 + Math.random() * 900000);
+      const subtotal = selectedItems.reduce((acc, c) => acc + (c.price * c.qty), 0);
+      const grandTotal = subtotal + 20000;
+
+      const newOrder = {
+        id: orderId,
+        items: [...selectedItems],
+        total: grandTotal,
+        status: 'Dikemas',
+        date: new Date().toLocaleDateString('id-ID')
+      };
+
+      orders.unshift(newOrder);
+      cart = cart.filter(c => !c.selected);
+      updateCartBadge();
+
+      // Update Profile counter
+      document.getElementById('prof-order-count').innerText = orders.length;
+
+      showToast('Pesanan berhasil dibuat!');
+      switchView('orders');
+    }
+
+    function renderOrders() {
+      const container = document.getElementById('orders-list');
+      if (orders.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-light);">Belum ada riwayat pesanan.</div>`;
+        return;
+      }
+
+      container.innerHTML = orders.map(ord => `
+        <div class="summary-card" style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:8px;">
+            <strong>${ord.id}</strong>
+            <span style="color:var(--accent); font-weight:600;">${ord.status}</span>
+          </div>
+
+          <!-- TIMELINE -->
+          <div class="timeline">
+            <div class="timeline-step ${ord.status === 'Dikemas' || ord.status === 'Dikirim' || ord.status === 'Selesai' ? 'active' : ''}">
+              <div class="timeline-icon"><i data-feather="box" style="width:12px;"></i></div>
+              Dikemas
+            </div>
+            <div class="timeline-step ${ord.status === 'Dikirim' || ord.status === 'Selesai' ? 'active' : ''}">
+              <div class="timeline-icon"><i data-feather="truck" style="width:12px;"></i></div>
+              Dikirim
+            </div>
+            <div class="timeline-step ${ord.status === 'Selesai' ? 'active' : ''}">
+              <div class="timeline-icon"><i data-feather="check" style="width:12px;"></i></div>
+              Selesai
+            </div>
+          </div>
+
+          <div style="border-top:1px solid #eee; padding-top:8px;">
+            ${ord.items.map(i => `
+              <div style="font-size:12px; display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span>${i.name} (${i.shade}, ${i.size}) x${i.qty}</span>
+                <span>Rp${(i.price * i.qty).toLocaleString()}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="font-size:13px; font-weight:700; text-align:right; margin-top:8px; color:var(--accent);">
+            Total: Rp${ord.total.toLocaleString()}
+          </div>
+        </div>
+      `).join('');
+      feather.replace();
+    }
+
+    // ADMIN OPERATIONS
+    function handleAddProduct(e) {
+      e.preventDefault();
+      const newProd = {
+        id: Date.now(),
+        name: document.getElementById('adm-p-name').value,
+        price: parseInt(document.getElementById('adm-p-price').value),
+        rating: 5.0,
+        sold: 0,
+        image: document.getElementById('adm-p-img').value,
+        desc: "Produk kosmetik kualitas premium dari Rara Cosmetics.",
+        shades: document.getElementById('adm-p-shades').value.split(',').map(s => s.trim()),
+        sizes: document.getElementById('adm-p-sizes').value.split(',').map(s => s.trim()),
+        isBestSeller: false
+      };
+
+      products.unshift(newProd);
+      renderProducts();
+      showToast('Produk baru berhasil ditambahkan!');
+      e.target.reset();
+    }
+
+    function renderAdminOrders() {
+      const container = document.getElementById('admin-orders-list');
+      if (orders.length === 0) {
+        container.innerHTML = `<div style="font-size:12px; color:var(--text-light); text-align:center; padding:10px;">Belum ada pesanan masuk.</div>`;
+        return;
+      }
+
+      container.innerHTML = orders.map((ord, idx) => `
+        <div style="border:1px solid #eee; padding:10px; border-radius:10px; margin-bottom:8px; font-size:12px;">
+          <div style="display:flex; justify-content:space-between; font-weight:700;">
+            <span>${ord.id}</span>
+            <span style="color:var(--accent);">${ord.status}</span>
+          </div>
+          <div>Total: Rp${ord.total.toLocaleString()}</div>
+          <div style="margin-top:6px; display:flex; gap:6px;">
+            <button class="btn btn-secondary btn-sm" onclick="updateOrderStatus(${idx}, 'Dikirim')">Set Dikirim</button>
+            <button class="btn btn-primary btn-sm" onclick="updateOrderStatus(${idx}, 'Selesai')">Set Selesai</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateOrderStatus(index, status) {
+      orders[index].status = status;
+      renderAdminOrders();
+      showToast(`Status pesanan ${orders[index].id} diubah menjadi ${status}`);
+    }
+
+    // MODAL & LOGOUT
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function performLogout() {
+      closeModal('logout-modal');
+      currentUser = null;
+      cart = [];
+      orders = [];
+      updateCartBadge();
+      
+      // Reset Form
+      document.getElementById('form-customer').reset();
+      nextStep(1);
+
+      // Show Overlay
+      document.getElementById('onboarding-overlay').style.display = 'flex';
+      switchView('home');
+      showToast('Berhasil logout');
+    }
+  </script>
+</body>
+</html>
