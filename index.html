@@ -536,16 +536,16 @@
     /* ADMIN TABS & DASHBOARD */
     .admin-menu-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
       margin-bottom: 16px;
     }
     .admin-tab-btn {
-      padding: 10px 4px;
+      padding: 8px 2px;
       background: var(--surface);
       border: 1px solid #eee;
-      border-radius: 12px;
-      font-size: 11px;
+      border-radius: 10px;
+      font-size: 10px;
       font-weight: 600;
       color: var(--text);
       display: flex;
@@ -773,7 +773,7 @@
         <input type="text" id="prof-email" class="form-control" readonly>
       </div>
       <div class="form-group">
-          <label>Nomor Telepon</label>
+        <label>Nomor Telepon</label>
         <input type="text" id="prof-phone" class="form-control" readonly>
       </div>
       <div class="form-group">
@@ -785,7 +785,7 @@
     </div>
   </div>
 
-  <!-- VIEW 6: ADMIN DASHBOARD (BERDASAARKAN MINDMAP) -->
+  <!-- VIEW 6: ADMIN DASHBOARD -->
   <div id="view-admin" class="view">
     <h3 style="margin-bottom: 14px;">Dashboard Admin</h3>
 
@@ -793,25 +793,34 @@
     <div class="admin-menu-grid">
       <button class="admin-tab-btn active" id="tab-btn-input" onclick="switchAdminSection('input')">
         <i data-feather="plus-circle"></i>
-        <span>Input Barang</span>
+        <span>Input/Edit</span>
       </button>
       <button class="admin-tab-btn" id="tab-btn-view" onclick="switchAdminSection('view')">
         <i data-feather="grid"></i>
-        <span>View Barang</span>
+        <span>Daftar</span>
+      </button>
+      <button class="admin-tab-btn" id="tab-btn-price" onclick="switchAdminSection('price')">
+        <i data-feather="tag"></i>
+        <span>Harga</span>
+      </button>
+      <button class="admin-tab-btn" id="tab-btn-supplier" onclick="switchAdminSection('supplier')">
+        <i data-feather="truck"></i>
+        <span>Supplier</span>
       </button>
       <button class="admin-tab-btn" id="tab-btn-report" onclick="switchAdminSection('report')">
         <i data-feather="file-text"></i>
-        <span>Laporan</span>
+        <span>Pembelian</span>
       </button>
     </div>
 
-    <!-- SECTION 1: INPUT BARANG -->
+    <!-- SECTION 1: INPUT & EDIT BARANG -->
     <div id="admin-sec-input" class="summary-card" style="margin-top: 0;">
-      <h4 style="margin-bottom: 12px;">Form Input Barang Baru</h4>
-      <form onsubmit="handleAddProduct(event)">
+      <h4 style="margin-bottom: 12px;" id="form-title-text">Form Input Barang Baru</h4>
+      <form onsubmit="handleSaveProduct(event)">
+        <input type="hidden" id="adm-p-id">
         <div class="form-group">
           <label>Nama Barang</label>
-          <input type="text" id="adm-p-name" class="form-control" placeholder="Contoh: Cushion Glow" required>
+          <input type="text" id="adm-p-name" class="form-control" placeholder="Contoh: G2G Airy Cushion" required>
         </div>
         <div class="form-group">
           <label>Harga (Rp)</label>
@@ -822,28 +831,47 @@
           <input type="url" id="adm-p-img" class="form-control" placeholder="https://..." required>
         </div>
         <div class="form-group">
-          <label>Variasi Warna (Pisahkan koma)</label>
-          <input type="text" id="adm-p-shades" class="form-control" placeholder="Vanilla, Honey, Sand" required>
+          <label>Variasi Warna/Shade (Pisahkan koma)</label>
+          <input type="text" id="adm-p-shades" class="form-control" placeholder="Light, Medium, Warm" required>
         </div>
         <div class="form-group">
           <label>Variasi Ukuran (Pisahkan koma)</label>
-          <input type="text" id="adm-p-sizes" class="form-control" placeholder="15 g, 30 g" required>
+          <input type="text" id="adm-p-sizes" class="form-control" placeholder="15 g, 30 ml" required>
         </div>
-        <button type="submit" class="btn btn-primary btn-sm">+ Simpan Ke Katalog</button>
+        <div style="display: flex; gap: 8px;">
+          <button type="submit" class="btn btn-primary btn-sm" id="btn-save-product">Simpan Ke Katalog</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-edit" style="display:none;" onclick="resetProductForm()">Batal</button>
+        </div>
       </form>
     </div>
 
     <!-- SECTION 2: VIEW BARANG -->
     <div id="admin-sec-view" class="summary-card" style="margin-top: 0; display: none;">
-      <h4 style="margin-bottom: 12px;">Daftar Katalog Barang (${products.length})</h4>
+      <h4 style="margin-bottom: 12px;">Kelola Katalog Barang</h4>
       <div id="admin-product-list">
         <!-- Injected by JS -->
       </div>
     </div>
 
-    <!-- SECTION 3: LAPORAN (HARIAN, BULANAN, TAHUNAN) -->
+    <!-- SECTION 3: VIEW HARGA BARANG -->
+    <div id="admin-sec-price" class="summary-card" style="margin-top: 0; display: none;">
+      <h4 style="margin-bottom: 12px;">Daftar Harga Produk</h4>
+      <div id="admin-price-list">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- SECTION 4: SUPPLIER -->
+    <div id="admin-sec-supplier" class="summary-card" style="margin-top: 0; display: none;">
+      <h4 style="margin-bottom: 12px;">Daftar Supplier Kosmetik</h4>
+      <div id="admin-supplier-list">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- SECTION 5: LIHAT PEMBELIAN (LAPORAN) -->
     <div id="admin-sec-report" class="summary-card" style="margin-top: 0; display: none;">
-      <h4 style="margin-bottom: 10px;">Laporan Penjualan</h4>
+      <h4 style="margin-bottom: 10px;">Lihat Pembelian Pelanggan</h4>
       
       <!-- REPORT SUB-TABS -->
       <div class="report-subtabs">
@@ -891,157 +919,154 @@
 
   <!-- JAVASCRIPT APP LOGIC -->
   <script>
-    // DATA INITIALIZATION (10 Kosmetik Lengkap)
+    // 10 PRODUK SESUAI PERMINTAAN
     let products = [
       {
         id: 1,
-        name: "Cushion Glow Cushion",
-        price: 139000,
+        name: "G2G Airy Cushion Pink",
+        price: 129000,
         rating: 4.9,
-        sold: 1250,
+        sold: 1420,
         image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500",
-        desc: "Cushion lightweight dengan hasil akhir glowing natural, menutupi noda hitam dan tahan 12 jam.",
-        shades: ["01 Light Ivory", "02 Natural Beige", "03 Warm Sand"],
+        desc: "Cushion airy ringan di wajah dengan hasil akhir flawless glow seharian.",
+        shades: ["01 Light", "02 Medium", "03 Beige"],
         sizes: ["15 g"],
         isBestSeller: true
       },
       {
         id: 2,
-        name: "Velvet Lip Cream",
-        price: 59000,
+        name: "Hanasui Serum Cushion",
+        price: 65000,
         rating: 4.8,
-        sold: 3400,
+        sold: 3800,
         image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500",
-        desc: "Lip cream matte bertekstur lembut tidak bikin bibir kering. Formula transferproof.",
-        shades: ["01 Rosewood", "02 Brick Red", "03 Nude Pink"],
-        sizes: ["4.5 ml"],
+        desc: "Cushion dengan kandungan serum menutrisi kulit sekaligus meratakan warna kulit.",
+        shades: ["101 Light", "102 Natural", "103 Tinted"],
+        sizes: ["15 g"],
         isBestSeller: true
       },
       {
         id: 3,
-        name: "Glassy Lip Gloss",
-        price: 49000,
+        name: "Implora Urban Lip Cream",
+        price: 28000,
         rating: 4.7,
-        sold: 890,
+        sold: 5200,
         image: "https://images.unsplash.com/photo-1631214524020-7e18db9a8f92?w=500",
-        desc: "Lip gloss bening berkilau dengan efek plumping instant dan kandungan Vitamin E.",
-        shades: ["Clear Crystal", "Berry Pink"],
-        sizes: ["5 ml"],
-        isBestSeller: false
-      },
-      {
-        id: 4,
-        name: "Silky Compact Powder",
-        price: 75000,
-        rating: 4.8,
-        sold: 950,
-        image: "https://images.unsplash.com/photo-1590156546946-ce55a12a6a5d?w=500",
-        desc: "Bedak padat mengontrol minyak berlebih dan menyamarkan pori-pori seketika.",
-        shades: ["Translucent", "Natural", "Sand"],
-        sizes: ["12 g"],
+        desc: "Lip cream matte favorit tahan lama dan tidak membuat bibir kering.",
+        shades: ["01 Dusky Nude", "02 Terra Cotta", "03 Dark Berry"],
+        sizes: ["4 ml"],
         isBestSeller: true
       },
       {
+        id: 4,
+        name: "Wardah Colorfit Velvet Lip Mousse",
+        price: 75000,
+        rating: 4.8,
+        sold: 1950,
+        image: "https://images.unsplash.com/photo-1590156546946-ce55a12a6a5d?w=500",
+        desc: "Lip mousse tekstur lembut seperti velvet berikan kenyamanan seharian di bibir.",
+        shades: ["01 Brown Dreamer", "02 Joyful Orange", "03 Rose Indeed"],
+        sizes: ["4 g"],
+        isBestSeller: false
+      },
+      {
         id: 5,
-        name: "Cheek Flush Blush On",
-        price: 52000,
+        name: "Emina Cheeklit Blush",
+        price: 40000,
         rating: 4.9,
-        sold: 670,
+        sold: 2300,
         image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=500",
-        desc: "Blush on perona pipi mudah dibaurkan dengan pigmen warna lembut dan tahan lama.",
-        shades: ["Peach Coral", "Soft Pink"],
-        sizes: ["8 g"],
+        desc: "Blush on praktis memberikan rona alami pada pipi dengan sentuhan segar.",
+        shades: ["Pink", "Violet", "Cherry"],
+        sizes: ["3.5 g"],
         isBestSeller: false
       },
       {
         id: 6,
-        name: "Volume Mascara Waterproof",
-        price: 68000,
+        name: "Wardah Colorfit Powder Foundation",
+        price: 89000,
         rating: 4.8,
         sold: 1100,
         image: "https://images.unsplash.com/photo-1631214500115-598fc2cb8d2d?w=500",
-        desc: "Mascara melentikkan dan menebalkan bulu mata tanpa menggumpal.",
-        shades: ["Midnight Black"],
-        sizes: ["8 ml"],
-        isBestSeller: true
+        desc: "Kombinasi bedak dan foundation untuk coverage maksimal dan menyamarkan pori.",
+        shades: ["Light Ivory", "Natural", "Warm Beige"],
+        sizes: ["12 g"],
+        isBestSeller: false
       },
       {
         id: 7,
-        name: "Eyeshadow Palette 9 Color",
-        price: 115000,
-        rating: 4.9,
-        sold: 520,
-        image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500",
-        desc: "Palette eyeshadow 9 warna kombinasi matte dan shimmer yang highly pigmented.",
-        shades: ["Warm Sunset", "Rose Garden"],
-        sizes: ["18 g"],
-        isBestSeller: false
-      },
-      {
-        id: 8,
-        name: "Hydrating Sunscreen SPF50",
-        price: 85000,
-        rating: 4.9,
-        sold: 2100,
+        name: "Skintific 5X Ceramide Moisturizer",
+        price: 139000,
+        rating: 5.0,
+        sold: 4500,
         image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500",
-        desc: "Tabur surya tanpa whitecast, ringan seperti air dan memberikan efek hidrasi.",
-        shades: ["Invisible Finish"],
-        sizes: ["30 ml", "50 ml"],
+        desc: "Pelembap wajah memperbaiki skin barrier dengan 5 jenis ceramide.",
+        shades: ["All Skin Types"],
+        sizes: ["30 g", "80 g"],
         isBestSeller: true
       },
       {
-        id: 9,
-        name: "Brightening Face Serum",
-        price: 120000,
-        rating: 4.9,
-        sold: 1800,
+        id: 8,
+        name: "Hada Labo Gokujyun Face Wash",
+        price: 48000,
+        rating: 4.8,
+        sold: 2100,
         image: "https://images.unsplash.com/photo-1608248597260-2fe84f23b7e4?w=500",
-        desc: "Serum pencerah wajah mencerahkan flek hitam dan meratakan warna kulit.",
-        shades: ["All Skin Types"],
-        sizes: ["20 ml", "30 ml"],
+        desc: "Pembersih wajah dengan kombinasi hyaluronic acid untuk kelembapan ekstra.",
+        shades: ["Ultimate Moisturizing"],
+        sizes: ["100 g"],
         isBestSeller: false
       },
       {
-        id: 10,
-        name: "Deep Cleansing Micellar Water",
-        price: 45000,
-        rating: 4.7,
-        sold: 1400,
+        id: 9,
+        name: "Azarine Hydrasoothe Sunscreen Gel",
+        price: 65000,
+        rating: 4.9,
+        sold: 6400,
         image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=500",
-        desc: "Pembersih make up waterproof dan kotoran tanpa rasa perih di mata.",
-        shades: ["Gentle Cleansing"],
-        sizes: ["100 ml", "250 ml"],
+        desc: "Tabir surya bentuk gel SPF45 PA++++ ringan, dingin, dan bebas alkohol.",
+        shades: ["Cooling Gel"],
+        sizes: ["50 ml"],
+        isBestSeller: true
+      },
+      {
+        id: 10,
+        name: "Pinkflash Eyeshadow Palette",
+        price: 59000,
+        rating: 4.7,
+        sold: 980,
+        image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500",
+        desc: "Palette eyeshadow bernuansa pink & peach sangat mudah dibaurkan.",
+        shades: ["Rosy Peach", "Romantic Amber"],
+        sizes: ["10 g"],
         isBestSeller: false
       }
     ];
 
+    // DATA SUPPLIER
+    let suppliers = [
+      { id: "SPL-01", name: "PT Glow Indo Kosmetik", contact: "081299887766", address: "Jl. Industri Raya No. 45, Jakarta" },
+      { id: "SPL-02", name: "CV Skincare Nusantara", contact: "085644332211", address: "Jl. Rungkut Industri No. 12, Surabaya" },
+      { id: "SPL-03", name: "UD Cantik Berseri", contact: "081322114455", address: "Jl. Malioboro No. 88, Yogyakarta" }
+    ];
 
-    // DUMMY INITIAL TRANSACTIONS FOR ADMIN REPORTS
     let orders = [
       {
         id: "#RRC-849201",
-        items: [{ name: "Cushion Glow Cushion", shade: "01 Light Ivory", size: "15 g", qty: 1, price: 139000 }],
-        total: 159000,
+        items: [{ name: "G2G Airy Cushion Pink", shade: "01 Light", size: "15 g", qty: 1, price: 129000 }],
+        total: 149000,
         status: "Selesai",
         date: "2026-08-07"
       },
       {
         id: "#RRC-302194",
-        items: [{ name: "Velvet Lip Cream", shade: "02 Brick Red", size: "4.5 ml", qty: 2, price: 59000 }],
-        total: 138000,
+        items: [{ name: "Skintific 5X Ceramide Moisturizer", shade: "All Skin Types", size: "30 g", qty: 1, price: 139000 }],
+        total: 159000,
         status: "Selesai",
         date: "2026-08-01"
-      },
-      {
-        id: "#RRC-104928",
-        items: [{ name: "Hydrating Sunscreen SPF50", shade: "Invisible Finish", size: "30 ml", qty: 1, price: 85000 }],
-        total: 105000,
-        status: "Selesai",
-        date: "2026-07-15"
       }
     ];
 
-    // STATE MANAGEMENT
     let currentUser = null;
     let selectedRole = 'customer';
     let currentStep = 1;
@@ -1051,13 +1076,11 @@
     let selectedSize = "";
     let activeReportTab = 'daily';
 
-    // INITIALIZATION
     window.onload = () => {
       feather.replace();
       renderProducts();
     };
 
-    // TOAST NOTIFICATION
     function showToast(message) {
       const toast = document.getElementById('toast');
       document.getElementById('toast-text').innerText = message;
@@ -1067,7 +1090,6 @@
       }, 3000);
     }
 
-    // ONBOARDING & ROLE SWITCHING
     function setRole(role) {
       selectedRole = role;
       document.getElementById('btn-role-customer').classList.toggle('active', role === 'customer');
@@ -1135,7 +1157,6 @@
       }
     }
 
-    // VIEW ROUTING
     function switchView(viewId) {
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById(`view-${viewId}`).classList.add('active');
@@ -1151,17 +1172,23 @@
       window.scrollTo(0,0);
     }
 
-    // ADMIN NAVIGATION & SECTIONS
+    // ADMIN SECTIONS
     function switchAdminSection(sec) {
       document.getElementById('tab-btn-input').classList.toggle('active', sec === 'input');
       document.getElementById('tab-btn-view').classList.toggle('active', sec === 'view');
+      document.getElementById('tab-btn-price').classList.toggle('active', sec === 'price');
+      document.getElementById('tab-btn-supplier').classList.toggle('active', sec === 'supplier');
       document.getElementById('tab-btn-report').classList.toggle('active', sec === 'report');
 
       document.getElementById('admin-sec-input').style.display = sec === 'input' ? 'block' : 'none';
       document.getElementById('admin-sec-view').style.display = sec === 'view' ? 'block' : 'none';
+      document.getElementById('admin-sec-price').style.display = sec === 'price' ? 'block' : 'none';
+      document.getElementById('admin-sec-supplier').style.display = sec === 'supplier' ? 'block' : 'none';
       document.getElementById('admin-sec-report').style.display = sec === 'report' ? 'block' : 'none';
 
       if (sec === 'view') renderAdminProducts();
+      if (sec === 'price') renderAdminPrices();
+      if (sec === 'supplier') renderAdminSuppliers();
       if (sec === 'report') renderReportContent();
     }
 
@@ -1173,7 +1200,6 @@
       renderReportContent();
     }
 
-    // RENDER PRODUCTS
     function renderProducts() {
       const bestContainer = document.getElementById('best-seller-container');
       const gridContainer = document.getElementById('product-grid-container');
@@ -1210,7 +1236,6 @@
       feather.replace();
     }
 
-    // PRODUCT DETAIL
     function openDetail(id) {
       selectedProduct = products.find(p => p.id === id);
       selectedShade = selectedProduct.shades[0];
@@ -1246,15 +1271,6 @@
           </div>
         </div>
 
-        <div style="margin-top:20px; border-top:1px solid #eee; padding-top:12px;">
-          <h4 style="font-size:14px; margin-bottom:8px;">Ulasan Pelanggan</h4>
-          <div style="background:var(--surface); padding:10px; border-radius:10px; font-size:12px;">
-            <strong>Anisa N.</strong>
-            <div style="color:#FFC107;">★★★★★</div>
-            <p>Suka banget sama teksturnya! Pas di kulit dan ga bikin gatal. Next mau order lagi!</p>
-          </div>
-        </div>
-
         <div style="display:flex; gap:8px; margin-top:20px;">
           <button class="btn btn-secondary" onclick="addToCartFromDetail()">+ Keranjang</button>
           <button class="btn btn-primary" onclick="buyDirectFromDetail()">Beli Sekarang</button>
@@ -1273,7 +1289,6 @@
       if (type === 'size') selectedSize = value;
     }
 
-    // CART OPERATIONS
     function quickAddToCart(productId) {
       const p = products.find(prod => prod.id === productId);
       addToCartItem(p, p.shades[0], p.sizes[0]);
@@ -1387,7 +1402,6 @@
       renderCart();
     }
 
-    // CHECKOUT & ORDERS
     function checkout() {
       const selectedItems = cart.filter(c => c.selected);
       if (selectedItems.length === 0) {
@@ -1464,39 +1478,86 @@
       feather.replace();
     }
 
-
-    // ADMIN FEATURES (INPUT BARANG, VIEW BARANG, LAPORAN HARIAN/BULANAN/TAHUNAN)
-    function handleAddProduct(e) {
+    // ADMIN: INPUT & EDIT BARANG
+    function handleSaveProduct(e) {
       e.preventDefault();
-      const newProd = {
-        id: Date.now(),
-        name: document.getElementById('adm-p-name').value,
-        price: parseInt(document.getElementById('adm-p-price').value),
-        rating: 5.0,
-        sold: 0,
-        image: document.getElementById('adm-p-img').value,
-        desc: "Produk kosmetik kualitas premium dari Rara Cosmetics.",
-        shades: document.getElementById('adm-p-shades').value.split(',').map(s => s.trim()),
-        sizes: document.getElementById('adm-p-sizes').value.split(',').map(s => s.trim()),
-        isBestSeller: false
-      };
+      const idInput = document.getElementById('adm-p-id').value;
+      const name = document.getElementById('adm-p-name').value;
+      const price = parseInt(document.getElementById('adm-p-price').value);
+      const image = document.getElementById('adm-p-img').value;
+      const shades = document.getElementById('adm-p-shades').value.split(',').map(s => s.trim());
+      const sizes = document.getElementById('adm-p-sizes').value.split(',').map(s => s.trim());
 
-      products.unshift(newProd);
+      if (idInput) {
+        // Edit Mode
+        const p = products.find(prod => prod.id == idInput);
+        if (p) {
+          p.name = name;
+          p.price = price;
+          p.image = image;
+          p.shades = shades;
+          p.sizes = sizes;
+          showToast('Barang berhasil diperbarui!');
+        }
+      } else {
+        // Input Mode Baru
+        const newProd = {
+          id: Date.now(),
+          name: name,
+          price: price,
+          rating: 5.0,
+          sold: 0,
+          image: image,
+          desc: "Produk kosmetik original pilihan Rara Cosmetics.",
+          shades: shades,
+          sizes: sizes,
+          isBestSeller: false
+        };
+        products.unshift(newProd);
+        showToast('Barang berhasil dimasukkan ke katalog!');
+      }
+
+      resetProductForm();
       renderProducts();
-      showToast('Barang berhasil dimasukkan ke katalog!');
-      e.target.reset();
       switchAdminSection('view');
+    }
+
+    function editProduct(id) {
+      const p = products.find(prod => prod.id === id);
+      if (!p) return;
+
+      document.getElementById('adm-p-id').value = p.id;
+      document.getElementById('adm-p-name').value = p.name;
+      document.getElementById('adm-p-price').value = p.price;
+      document.getElementById('adm-p-img').value = p.image;
+      document.getElementById('adm-p-shades').value = p.shades.join(', ');
+      document.getElementById('adm-p-sizes').value = p.sizes.join(', ');
+
+      document.getElementById('form-title-text').innerText = 'Form Edit Barang';
+      document.getElementById('btn-save-product').innerText = 'Update Perubahan';
+      document.getElementById('btn-cancel-edit').style.display = 'inline-flex';
+
+      switchAdminSection('input');
+    }
+
+    function resetProductForm() {
+      document.getElementById('adm-p-id').value = '';
+      document.getElementById('form-title-text').innerText = 'Form Input Barang Baru';
+      document.getElementById('btn-save-product').innerText = 'Simpan Ke Katalog';
+      document.getElementById('btn-cancel-edit').style.display = 'none';
+      document.querySelector('#admin-sec-input form').reset();
     }
 
     function renderAdminProducts() {
       const container = document.getElementById('admin-product-list');
-      container.innerHTML = products.map((p, idx) => `
+      container.innerHTML = products.map(p => `
         <div style="display:flex; gap:10px; border-bottom:1px solid #eee; padding:8px 0; align-items:center;">
           <img src="${p.image}" style="width:40px; height:40px; border-radius:6px; object-fit:cover;">
           <div style="flex:1;">
             <div style="font-size:12px; font-weight:600;">${p.name}</div>
             <div style="font-size:11px; color:var(--accent);">Rp${p.price.toLocaleString()}</div>
           </div>
+          <button class="btn btn-secondary btn-sm" style="width:auto; padding:4px 8px;" onclick="editProduct(${p.id})">Edit</button>
           <button class="btn btn-secondary btn-sm" style="color:red; width:auto; padding:4px 8px;" onclick="deleteProduct(${p.id})">Hapus</button>
         </div>
       `).join('');
@@ -1506,9 +1567,40 @@
       products = products.filter(p => p.id !== id);
       renderProducts();
       renderAdminProducts();
+      renderAdminPrices();
       showToast('Barang berhasil dihapus!');
     }
 
+    // VIEW HARGA BARANG
+    function renderAdminPrices() {
+      const container = document.getElementById('admin-price-list');
+      container.innerHTML = `
+        <div style="font-size:11px; color:var(--text-light); margin-bottom:8px;">Daftar update harga seluruh produk aktif:</div>
+        ${products.map(p => `
+          <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:8px 0; font-size:12px;">
+            <span>${p.name}</span>
+            <strong style="color:var(--accent);">Rp${p.price.toLocaleString()}</strong>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    // SUPPLIER
+    function renderAdminSuppliers() {
+      const container = document.getElementById('admin-supplier-list');
+      container.innerHTML = `
+        <div style="font-size:11px; color:var(--text-light); margin-bottom:8px;">Daftar mitra supplier Rara Cosmetics:</div>
+        ${suppliers.map(s => `
+          <div style="background:var(--bg); padding:10px; border-radius:10px; margin-bottom:8px; font-size:12px;">
+            <strong>${s.name} (${s.id})</strong>
+            <div style="color:var(--text-light); margin-top:2px;">Kontak: ${s.contact}</div>
+            <div style="color:var(--text-light);">Alamat: ${s.address}</div>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    // LIHAT PEMBELIAN (LAPORAN)
     function renderReportContent() {
       const container = document.getElementById('report-content');
       const today = new Date().toISOString().split('T')[0];
@@ -1519,13 +1611,13 @@
       let labelText = "";
 
       if (activeReportTab === 'daily') {
-        labelText = "Laporan Harian (Hari Ini)";
+        labelText = "Pembelian Harian (Hari Ini)";
         filteredOrders = orders.filter(o => o.date === today);
       } else if (activeReportTab === 'monthly') {
-        labelText = "Laporan Bulanan (Bulan Ini)";
+        labelText = "Pembelian Bulanan (Bulan Ini)";
         filteredOrders = orders.filter(o => o.date.startsWith(currentMonth));
       } else if (activeReportTab === 'yearly') {
-        labelText = "Laporan Tahunan (Tahun Ini)";
+        labelText = "Pembelian Tahunan (Tahun Ini)";
         filteredOrders = orders.filter(o => o.date.startsWith(currentYear));
       }
 
@@ -1535,25 +1627,24 @@
         <div style="background:var(--bg); padding:12px; border-radius:12px; margin-bottom:12px;">
           <div style="font-size:11px; color:var(--text-light);">${labelText}</div>
           <div style="font-size:18px; font-weight:700; color:var(--accent);">Rp${totalRevenue.toLocaleString()}</div>
-          <div style="font-size:11px; color:var(--text); margin-top:2px;">Total ${filteredOrders.length} Transaksi Selesai</div>
+          <div style="font-size:11px; color:var(--text); margin-top:2px;">Total ${filteredOrders.length} Transaksi</div>
         </div>
 
-        <div style="font-size:12px; font-weight:600; margin-bottom:6px;">Rincian Transaksi:</div>
-        ${filteredOrders.length === 0 ? `<div style="font-size:11px; color:var(--text-light); text-align:center; padding:10px;">Tidak ada transaksi pada periode ini.</div>` : 
+        <div style="font-size:12px; font-weight:600; margin-bottom:6px;">Rincian Pembelian Pelanggan:</div>
+        ${filteredOrders.length === 0 ? `<div style="font-size:11px; color:var(--text-light); text-align:center; padding:10px;">Tidak ada data pembelian pada periode ini.</div>` : 
           filteredOrders.map(o => `
-            <div style="border-bottom:1px solid #eee; padding:6px 0; font-size:11px;">
+            <div style="border-bottom:1px solid #eee; padding:8px 0; font-size:11px;">
               <div style="display:flex; justify-content:space-between;">
                 <strong>${o.id}</strong>
                 <span>${o.date}</span>
               </div>
-              <div style="color:var(--accent); font-weight:600;">Rp${o.total.toLocaleString()}</div>
+              <div style="color:var(--accent); font-weight:600; margin-top:2px;">Total: Rp${o.total.toLocaleString()}</div>
             </div>
           `).join('')
         }
       `;
     }
 
-    // MODAL & LOGOUT
     function openModal(id) {
       document.getElementById(id).classList.add('active');
     }
