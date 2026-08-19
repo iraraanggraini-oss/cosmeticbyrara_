@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rara Cosmetics</title>
+  <!-- Feather Icons -->
   <script src="https://unpkg.com/feather-icons"></script>
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
+    /* RESET & BASE STYLES */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -41,10 +44,24 @@
       padding-bottom: 70px;
     }
 
-    button { cursor: pointer; border: none; outline: none; font-family: inherit; }
-    input, select, textarea { font-family: inherit; outline: none; }
-    a { text-decoration: none; color: inherit; }
+    button {
+      cursor: pointer;
+      border: none;
+      outline: none;
+      font-family: inherit;
+    }
 
+    input, select, textarea {
+      font-family: inherit;
+      outline: none;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* TOAST NOTIFICATION */
     #toast {
       position: fixed;
       top: -60px;
@@ -66,15 +83,18 @@
       align-items: center;
       gap: 10px;
     }
-    #toast.show { top: 20px; }
+    #toast.show {
+      top: 20px;
+    }
 
+    /* HEADER */
     .header {
       position: sticky;
       top: 0;
-      background: var(--accent);
-      color: white;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
       z-index: 100;
-      padding: 16px 20px;
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -83,16 +103,31 @@
     .header .logo {
       font-size: 20px;
       font-weight: 700;
+      color: var(--accent);
       letter-spacing: -0.5px;
     }
+    .header .role-badge {
+      font-size: 10px;
+      background: var(--secondary);
+      color: var(--accent);
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+      margin-left: 6px;
+      text-transform: uppercase;
+    }
 
+    /* BOTTOM NAVIGATION */
     .bottom-nav {
       position: fixed;
-      bottom: 0; left: 50%;
+      bottom: 0;
+      left: 50%;
       transform: translateX(-50%);
-      width: 100%; max-width: 480px;
+      width: 100%;
+      max-width: 480px;
       background: var(--surface);
-      display: flex; justify-content: space-around;
+      display: flex;
+      justify-content: space-around;
       padding: 10px 0;
       box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
       border-top-left-radius: 20px;
@@ -100,403 +135,670 @@
       z-index: 100;
     }
     .nav-item {
-      display: flex; flex-direction: column; align-items: center;
-      font-size: 11px; color: var(--text-light); background: none; position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-light);
+      background: none;
+      position: relative;
     }
-    .nav-item.active { color: var(--accent); font-weight: 700; }
-    .nav-item i { margin-bottom: 4px; width: 20px; height: 20px; }
+    .nav-item.active {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .nav-item i {
+      margin-bottom: 4px;
+      width: 20px;
+      height: 20px;
+    }
+    .badge {
+      position: absolute;
+      top: -2px;
+      right: 4px;
+      background: var(--accent);
+      color: white;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
 
-    .view { display: none; padding: 16px; animation: fadeIn 0.3s ease; }
-    .view.active { display: block; }
+    /* VIEWS */
+    .view {
+      display: none;
+      padding: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+    .view.active {
+      display: block;
+    }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* ONBOARDING / LOGIN OVERLAY */
     #onboarding-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: var(--bg); z-index: 1000;
-      display: flex; justify-content: center; align-items: center; padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
     }
     .onboarding-card {
-      background: var(--surface); border-radius: 24px; padding: 28px 24px; width: 100%; max-width: 400px;
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 400px;
       box-shadow: var(--shadow);
     }
-    .role-tabs { display: flex; background: var(--secondary); border-radius: 12px; padding: 4px; margin-bottom: 20px; }
+    .role-tabs {
+      display: flex;
+      background: var(--secondary);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 20px;
+    }
     .role-btn {
-      flex: 1; padding: 10px; text-align: center; border-radius: 10px; font-size: 13px; font-weight: 600;
-      color: var(--text); background: transparent; transition: 0.3s;
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      background: transparent;
+      transition: 0.3s;
     }
-    .role-btn.active { background: var(--surface); color: var(--accent); box-shadow: var(--shadow-sm); }
+    .role-btn.active {
+      background: var(--surface);
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+    .step-indicator {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .step-dot {
+      flex: 1;
+      height: 4px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+    .step-dot.active {
+      background: var(--accent);
+    }
 
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+    /* FORM COMPONENTS */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
     .form-control {
-      width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #f0f0f0; background: #FAFAFA; font-size: 14px;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid #f0f0f0;
+      background: #FAFAFA;
+      font-size: 14px;
+      transition: 0.3s;
     }
-    .form-control:focus { border-color: var(--primary); background: var(--surface); }
+    .form-control:focus {
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px var(--secondary);
+    }
 
+    /* BUTTONS */
     .btn {
-      width: 100%; padding: 12px 18px; border-radius: 12px; font-weight: 600; font-size: 14px;
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: 0.2s;
     }
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-secondary { background: var(--secondary); color: var(--accent); }
-    .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; width: auto; }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary:active {
+      background: var(--accent-dark);
+    }
+    .btn-secondary {
+      background: var(--secondary);
+      color: var(--accent);
+    }
+    .btn-outline {
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+    }
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
 
+    /* HOME COMPONENTS */
     .hero-banner {
       background: linear-gradient(135deg, var(--primary), var(--accent));
-      border-radius: var(--radius); padding: 20px; color: white; margin-bottom: 20px;
+      border-radius: var(--radius);
+      padding: 20px;
+      color: white;
+      margin-bottom: 20px;
     }
     .hero-banner h2 { font-size: 20px; margin-bottom: 4px; }
     .hero-banner p { font-size: 12px; opacity: 0.9; }
 
-    .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
-    .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .horizontal-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scrollbar-width: none;
+    }
+    .horizontal-scroll::-webkit-scrollbar { display: none; }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
 
     .product-card {
-      background: var(--surface); border-radius: var(--radius); padding: 10px;
-      box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 10px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      position: relative;
     }
-    .product-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
-    .product-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .product-price { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
-    .product-meta { font-size: 10px; color: var(--text-light); margin-bottom: 8px; }
+    .product-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+    .product-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .product-price {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .product-meta {
+      font-size: 10px;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .product-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 6px;
+    }
+
+    /* PRODUCT DETAIL VIEW */
+    .detail-img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+    .variant-group {
+      margin: 14px 0;
+    }
+    .variant-group label {
+      font-size: 12px;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .variant-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .variant-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid #e0e0e0;
+      background: var(--surface);
+      font-size: 12px;
+    }
+    .variant-btn.selected {
+      border-color: var(--accent);
+      background: var(--secondary);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* CART & CHECKOUT METHOD */
+    .cart-item {
+      display: flex;
+      gap: 12px;
+      background: var(--surface);
+      padding: 12px;
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .cart-item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .cart-info {
+      flex: 1;
+    }
+    .cart-title { font-size: 13px; font-weight: 600; }
+    .cart-variant { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
+    .qty-cnt {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .qty-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--secondary);
+      color: var(--accent);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .payment-methods {
+      display: flex;
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .payment-card {
+      flex: 1;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      background: var(--surface);
+      transition: 0.2s;
+    }
+    .payment-card.selected {
+      border-color: var(--accent);
+      background: var(--secondary);
+    }
+    .payment-card i {
+      color: var(--accent);
+    }
+
+    .qris-box {
+      border: 1px dashed var(--accent);
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      margin: 12px 0;
+    }
+    .qris-box img {
+      width: 160px;
+      height: 160px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
 
     .summary-card {
-      background: var(--surface); padding: 16px; border-radius: var(--radius); margin-top: 16px; box-shadow: var(--shadow-sm);
+      background: var(--surface);
+      padding: 16px;
+      border-radius: var(--radius);
+      margin-top: 16px;
+      box-shadow: var(--shadow-sm);
     }
-    .summary-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
-    .summary-row.total { font-weight: 700; font-size: 15px; border-top: 1px dashed #eee; padding-top: 8px; color: var(--accent); }
-
-    .payment-option {
-      border: 2px solid #eee; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.2s;
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 8px;
     }
-    .payment-option.selected { border-color: var(--accent); background: var(--secondary); }
-
-    .admin-menu-btn {
-      width: 100%; background: var(--surface); border: 1px solid #eee; padding: 14px; border-radius: 12px;
-      font-weight: 600; text-align: left; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; color: var(--text);
+    .summary-row.total {
+      font-weight: 700;
+      font-size: 15px;
+      border-top: 1px dashed #eee;
+      padding-top: 8px;
+      color: var(--accent);
     }
-    .admin-menu-btn:hover { background: var(--secondary); color: var(--accent); }
 
-    table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
-    th, td { border: 1px solid #eee; padding: 8px; text-align: left; }
-    th { background: var(--secondary); color: var(--accent); }
+    /* PROFILE & ORDERS */
+    .profile-card {
+      background: var(--surface);
+      padding: 20px;
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+    .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 8px;
+      border: 2px solid var(--primary);
+    }
+
+    .timeline {
+      display: flex;
+      justify-content: space-between;
+      margin: 16px 0;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: #eee;
+      z-index: 1;
+    }
+    .timeline-step {
+      position: relative;
+      z-index: 2;
+      background: var(--bg);
+      padding: 0 4px;
+      text-align: center;
+      font-size: 10px;
+    }
+    .timeline-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 4px;
+    }
+    .timeline-step.active .timeline-icon {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* ADMIN TABS & DASHBOARD */
+    .admin-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .admin-tab-btn {
+      padding: 10px 4px;
+      background: var(--surface);
+      border: 1px solid #eee;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: 0.2s;
+    }
+    .admin-tab-btn.active {
+      background: var(--secondary);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-top: 10px;
+    }
+    .admin-table th, .admin-table td {
+      border: 1px solid #eee;
+      padding: 8px 4px;
+      text-align: left;
+    }
+    .admin-table th {
+      background: #f9f9f9;
+      font-weight: 600;
+    }
+
+    .report-subtabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .subtab-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      background: #f0f0f0;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+    .subtab-btn.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: var(--surface);
+      padding: 20px;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 360px;
+    }
   </style>
 </head>
 <body>
 
+  <!-- TOAST NOTIFICATION -->
   <div id="toast"><i data-feather="info"></i> <span id="toast-text">Pesan</span></div>
 
+  <!-- HEADER STICKY -->
   <header class="header">
-    <div class="logo">RARA COSMETICS</div>
-    <button onclick="openLogoutModal()" style="background:rgba(255,255,255,0.2); color:white; padding:6px 12px; border-radius:8px; font-size:12px;">Logout</button>
+    <div style="display: flex; align-items: center;">
+      <span class="logo">Rara.</span>
+      <span class="role-badge" id="header-role-badge">Pelanggan</span>
+    </div>
+    <div id="header-right">
+      <button onclick="switchView('cart')" style="background:none; position:relative;">
+        <i data-feather="shopping-bag" style="color:var(--text)"></i>
+        <span class="badge" id="cart-badge" style="display:none;">0</span>
+      </button>
+    </div>
   </header>
 
-  <!-- ONBOARDING LOGIN -->
+  <!-- ONBOARDING & LOGIN OVERLAY -->
   <div id="onboarding-overlay">
     <div class="onboarding-card">
       <div style="text-align: center; margin-bottom: 20px;">
         <h2 style="color: var(--accent);">Rara Cosmetics</h2>
-        <p style="font-size: 12px; color: var(--text-light);">Original Beauty & Skincare Store</p>
+        <p style="font-size: 12px; color: var(--text-light);">Selamat Datang di Beauty & Skincare Store</p>
       </div>
 
+      <!-- ROLE SELECTOR -->
       <div class="role-tabs">
         <button class="role-btn active" id="btn-role-customer" onclick="setRole('customer')">Pelanggan</button>
         <button class="role-btn" id="btn-role-admin" onclick="setRole('admin')">Admin</button>
       </div>
 
-      <form id="login-form" onsubmit="handleLogin(event)">
-        <div class="form-group" id="group-username">
-          <label>Nama / Username</label>
-          <input type="text" id="input-user" class="form-control" placeholder="Masukkan nama Anda" required>
+      <!-- CUSTOMER MULTI-STEP ONBOARDING -->
+      <div id="customer-flow">
+        <div class="step-indicator">
+          <div class="step-dot active" id="dot-1"></div>
+          <div class="step-dot" id="dot-2"></div>
+          <div class="step-dot" id="dot-3"></div>
         </div>
-        <div class="form-group" id="group-address">
-          <label>Alamat Pengiriman</label>
-          <textarea id="input-addr" class="form-control" placeholder="Alamat lengkap..." rows="2"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary" id="btn-login-submit">Masuk Aplikasi</button>
-      </form>
+
+        <form id="form-customer" onsubmit="handleCustomerSubmit(event)">
+          <!-- STEP 1 -->
+          <div id="step-1">
+            <div class="form-group">
+              <label>Email Pengguna</label>
+              <input type="email" id="cust-email" class="form-control" placeholder="contoh@gmail.com" required>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="nextStep(2)">Lanjut <i data-feather="arrow-right"></i></button>
+          </div>
+
+          <!-- STEP 2 -->
+          <div id="step-2" style="display: none;">
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" id="cust-username" class="form-control" placeholder="Username Anda" required>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="cust-password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-secondary" onclick="nextStep(1)">Kembali</button>
+              <button type="button" class="btn btn-primary" onclick="nextStep(3)">Lanjut</button>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div id="step-3" style="display: none;">
+            <div class="form-group">
+              <label>Nomor Telepon</label>
+              <input type="tel" id="cust-phone" class="form-control" placeholder="08123456789" required>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-secondary" onclick="nextStep(2)">Kembali</button>
+              <button type="submit" class="btn btn-primary">Mulai Belanja</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- ADMIN LOGIN FLOW -->
+      <div id="admin-flow" style="display: none;">
+        <form onsubmit="handleAdminSubmit(event)">
+          <div class="form-group">
+            <label>Username Admin</label>
+            <input type="text" id="admin-username" class="form-control" value="admin" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="admin-password" class="form-control" value="admin123" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Masuk Portal Admin</button>
+        </form>
+      </div>
+
     </div>
   </div>
 
-  <!-- VIEW: HOME / KATALOG -->
+  <!-- VIEW 1: HOME (CUSTOMER) -->
   <div id="view-home" class="view active">
     <div class="hero-banner">
       <h2>Glow Up Bersama Rara</h2>
-      <p>Pilih produk kecantikan favoritmu hari ini!</p>
+      <p>Koleksi kosmetik & skincare original terlengkap!</p>
     </div>
-    <div class="section-title">Katalog Produk (10 Pilihan) ✨</div>
-    <div class="product-grid" id="product-grid-container"></div>
-  </div>
 
-  <!-- VIEW: DETAIL PRODUK & CHECKOUT -->
-  <div id="view-checkout" class="view">
-    <button onclick="switchView('home')" class="btn btn-secondary btn-sm" style="margin-bottom: 12px;">← Kembali</button>
-    <div class="summary-card" style="margin-top:0;">
-      <h4 style="margin-bottom: 10px; color:var(--accent);">Konfirmasi Pesanan</h4>
-      <div style="font-size:12px; margin-bottom:12px;">
-        <strong>Alamat Pengiriman:</strong>
-        <div id="checkout-address" style="color:var(--text-light); margin-top:2px;"></div>
-      </div>
+    <!-- BEST SELLER HORIZONTAL -->
+    <div class="section-title">
+      <span>Best Seller ✨</span>
+    </div>
+    <div class="horizontal-scroll" id="best-seller-container">
+      <!-- Injected by JS -->
+    </div>
 
-      <label style="font-size:12px; font-weight:600; display:block; margin-bottom:6px;">Metode Pembayaran:</label>
-      <div style="display:flex; gap:10px; margin-bottom:12px;">
-        <div class="payment-option selected" id="opt-cod" onclick="selectPayment('COD')">
-          <i data-feather="dollar-sign"></i> <div><strong>COD</strong><div style="font-size:10px; color:var(--text-light);">Bayar di Tempat</div></div>
-        </div>
-        <div class="payment-option" id="opt-qris" onclick="selectPayment('QRIS')">
-          <i data-feather="grid"></i> <div><strong>QRIS</strong><div style="font-size:10px; color:var(--text-light);">Scan Barcode</div></div>
-        </div>
-      </div>
-
-      <div id="qris-container" style="display:none; text-align:center; background:#fafafa; padding:12px; border-radius:12px; margin-bottom:12px; border:1px dashed var(--accent);">
-        <p style="font-size:11px; margin-bottom:6px; font-weight:600;">Scan QRIS Untuk Membayar:</p>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=RaraCosmeticsQRIS" style="width:120px; height:120px;">
-        <p style="font-size:9px; color:var(--text-light); margin-top:4px;">Mendukung GoPay, OVO, Dana, ShopeePay, BCA, dll.</p>
-      </div>
-
-      <div style="border-top:1px solid #eee; padding-top:8px;">
-        <div class="summary-row"><span id="co-prod-name">Produk</span><span id="co-prod-price">Rp0</span></div>
-        <div class="summary-row"><span>Ongkos Kirim (Flat):</span><span>Rp5.000</span></div>
-        <div class="summary-row total"><span>Total Tagihan:</span><span id="co-total">Rp0</span></div>
-      </div>
-
-      <button class="btn btn-primary" style="margin-top:14px;" onclick="finalizeCheckout()">Klik Checkout</button>
+    <!-- KOLEKSI PILIHAN GRID -->
+    <div class="section-title" style="margin-top: 16px;">
+      <span>Koleksi Pilihan</span>
+    </div>
+    <div class="product-grid" id="product-grid-container">
+      <!-- Injected by JS -->
     </div>
   </div>
 
-  <!-- VIEW: CUSTOMER ORDERS (RIWAYAT) -->
-  <div id="view-orders" class="view">
-    <h3 style="margin-bottom: 12px;">Status Pesanan Saya</h3>
-    <div id="customer-orders-list"></div>
+  <!-- VIEW 2: PRODUCT DETAIL -->
+  <div id="view-detail" class="view">
+    <button onclick="switchView('home')" class="btn btn-secondary btn-sm" style="margin-bottom: 12px; width: auto;">
+      <i data-feather="arrow-left"></i> Kembali
+    </button>
+    <div id="detail-content">
+      <!-- Injected by JS -->
+    </div>
   </div>
 
-  <!-- VIEW: ADMIN MENU UTAMA -->
-  <div id="view-admin-menu" class="view">
-    <h3 style="margin-bottom: 14px;">Menu Utama Admin</h3>
-    <button class="admin-menu-btn" onclick="switchAdminTab('input')"><i data-feather="plus-circle"></i> Dashboard & Input Barang</button>
-    <button class="admin-menu-btn" onclick="switchAdminTab('supplier')"><i data-feather="truck"></i> Edit / Input Supplier</button>
-    <button class="admin-menu-btn" onclick="switchAdminTab('view')"><i data-feather="tag"></i> View & Ubah Harga Barang</button>
-    <button class="admin-menu-btn" onclick="switchAdminTab('orders')"><i data-feather="shopping-bag"></i> Lihat Pembelian & Kontrol Status</button>
-    <button class="admin-menu-btn" onclick="switchAdminTab('report')"><i data-feather="file-text"></i> Laporan Penjualan</button>
+  <!-- VIEW 3: CART & CHECKOUT -->
+  <div id="view-cart" class="view">
+    <h3 style="margin-bottom: 12px;">Keranjang Belanja</h3>
+    <div id="cart-list">
+      <!-- Injected by JS -->
+    </div>
+
+    <div class="summary-card" id="cart-summary">
+      <!-- Injected by JS -->
+    </div>
   </div>
 
-  <!-- VIEW: ADMIN SUB-PAGES -->
-  <div id="view-admin-sub" class="view">
-    <button onclick="switchView('admin-menu')" class="btn btn-secondary btn-sm" style="margin-bottom: 12px;">← Menu Admin</button>
-    <div class="summary-card" id="admin-sub-content" style="margin-top:0;"></div>
-  </div>
-
-  <!-- BOTTOM NAV (CUSTOMER) -->
-  <nav class="bottom-nav" id="customer-nav">
-    <button class="nav-item active" onclick="switchView('home')"><i data-feather="home"></i><span>Beranda</span></button>
-    <button class="nav-item" onclick="switchView('orders')"><i data-feather="shopping-bag"></i><span>Pesanan</span></button>
-  </nav>
-
-  <script>
-    let products = [
-      { id: 1, name: "G2G Airy Cushion Pink", price: 129000, rating: 4.9, sold: 1420, image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500" },
-      { id: 2, name: "Hanasui Serum Cushion", price: 65000, rating: 4.8, sold: 3800, image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" },
-      { id: 3, name: "Skintific Moisturizer", price: 139000, rating: 5.0, sold: 4500, image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500" },
-      { id: 4, name: "Wardah Matte Lip Cream", price: 62000, rating: 4.7, sold: 2100, image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" },
-      { id: 5, name: "Emina Bright Stuff Face Wash", price: 28000, rating: 4.9, sold: 5600, image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500" },
-      { id: 6, name: "Somethinc Niacinamide Serum", price: 115000, rating: 4.9, sold: 3100, image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500" },
-      { id: 7, name: "Azarine Sunscreen Gel", price: 65000, rating: 5.0, sold: 7200, image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" },
-      { id: 8, name: "Make Over Eyeshadow Palette", price: 185000, rating: 4.8, sold: 950, image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500" },
-      { id: 9, name: "Pixy Concealing Base", price: 40000, rating: 4.6, sold: 1800, image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500" },
-      { id: 10, name: "Implora Jelly Tint", price: 22000, rating: 4.8, sold: 4300, image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" }
-    ];
-
-    let orders = [
-      { id: 1, date: "19/8/2026", user: "Rara", address: "Jl. Melati No. 12", product: "G2G Airy Cushion Pink", total: 134000, payment: "COD", status: "Dikemas" }
-    ];
-
-    let currentUser = null;
-    let selectedRole = 'customer';
-    let currentPayment = 'COD';
-    let activeCheckoutProduct = null;
-
-    window.onload = () => { feather.replace(); renderProducts(); };
-
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      document.getElementById('toast-text').innerText = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2500);
-    }
-
-    function setRole(role) {
-      selectedRole = role;
-      document.getElementById('btn-role-customer').classList.toggle('active', role === 'customer');
-      document.getElementById('btn-role-admin').classList.toggle('active', role === 'admin');
-      document.getElementById('group-username').style.display = role === 'admin' ? 'none' : 'block';
-      document.getElementById('group-address').style.display = role === 'admin' ? 'none' : 'block';
-      document.getElementById('btn-login-submit').innerText = role === 'admin' ? 'Masuk Admin' : 'Masuk Aplikasi';
-    }
-
-    function handleLogin(e) {
-      e.preventDefault();
-      if (selectedRole === 'admin') {
-        currentUser = { role: 'admin' };
-        document.getElementById('onboarding-overlay').style.display = 'none';
-        document.getElementById('customer-nav').style.display = 'none';
-        switchView('admin-menu');
-        showToast('Login Admin Berhasil');
-      } else {
-        const name = document.getElementById('input-user').value;
-        const addr = document.getElementById('input-addr').value;
-        currentUser = { role: 'customer', name, address: addr };
-        document.getElementById('onboarding-overlay').style.display = 'none';
-        document.getElementById('customer-nav').style.display = 'flex';
-        switchView('home');
-        showToast(`Selamat datang, ${name}!`);
-      }
-    }
-
-    function switchView(viewId) {
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById(`view-${viewId}`).classList.add('active');
-      if (viewId === 'orders') renderCustomerOrders();
-      window.scrollTo(0, 0);
-    }
-
-    function renderProducts() {
-      const grid = document.getElementById('product-grid-container');
-      grid.innerHTML = products.map(p => `
-        <div class="product-card" onclick="openCheckout(${p.id})">
-          <img src="${p.image}">
-          <div class="product-title">${p.name}</div>
-          <div class="product-price">Rp${p.price.toLocaleString()}</div>
-          <div class="product-meta">⭐ ${p.rating} | Terjual ${p.sold}</div>
-          <button class="btn btn-secondary btn-sm" style="width:100%;">Beli Sekarang</button>
-        </div>`).join('');
-    }
-
-    function openCheckout(id) {
-      if (!currentUser || currentUser.role === 'admin') {
-        showToast('Silakan login sebagai pelanggan terlebih dahulu!');
-        return;
-      }
-      activeCheckoutProduct = products.find(p => p.id === id);
-      document.getElementById('checkout-address').innerText = `${currentUser.name} (${currentUser.address || 'Alamat Utama'})`;
-      document.getElementById('co-prod-name').innerText = activeCheckoutProduct.name;
-      document.getElementById('co-prod-price').innerText = `Rp${activeCheckoutProduct.price.toLocaleString()}`;
-      document.getElementById('co-total').innerText = `Rp${(activeCheckoutProduct.price + 5000).toLocaleString()}`;
-      switchView('checkout');
-    }
-
-    function selectPayment(type) {
-      currentPayment = type;
-      document.getElementById('opt-cod').classList.toggle('selected', type === 'COD');
-      document.getElementById('opt-qris').classList.toggle('selected', type === 'QRIS');
-      document.getElementById('qris-container').style.display = type === 'QRIS' ? 'block' : 'none';
-    }
-
-    function finalizeCheckout() {
-      orders.unshift({
-        id: orders.length + 1,
-        date: new Date().toLocaleDateString('id-ID'),
-        user: currentUser.name,
-        address: currentUser.address || 'Alamat Utama',
-        product: activeCheckoutProduct.name,
-        total: activeCheckoutProduct.price + 5000,
-        payment: currentPayment,
-        status: 'Dikemas'
-      });
-      showToast('Pesanan berhasil dibuat!');
-      switchView('orders');
-    }
-
-    function renderCustomerOrders() {
-      const list = document.getElementById('customer-orders-list');
-      const userOrders = orders.filter(o => o.user === currentUser.name);
-      if (userOrders.length === 0) {
-        list.innerHTML = `<p style="font-size:12px; color:var(--text-light); text-align:center;">Belum ada pesanan.</p>`;
-        return;
-      }
-      list.innerHTML = userOrders.map(o => `
-        <div class="summary-card" style="margin-bottom:10px;">
-          <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700;">
-            <span>${o.product}</span>
-            <span style="color:var(--accent);">${o.status}</span>
-          </div>
-          <div style="font-size:11px; color:var(--text-light); margin:4px 0;">Total: Rp${o.total.toLocaleString()} (${o.payment})</div>
-          <div style="font-size:10px; color:var(--text-light);">Tanggal: ${o.date}</div>
-        </div>`).join('');
-    }
-
-    function switchAdminTab(tab) {
-      switchView('admin-sub');
-      const box = document.getElementById('admin-sub-content');
-      if (tab === 'input') {
-        box.innerHTML = `
-          <h4>Dashboard & Input Barang Baru</h4>
-          <form onsubmit="handleInputProduct(event)" style="margin-top:10px;">
-            <div class="form-group"><label>Nama Barang</label><input type="text" id="adm-name" class="form-control" required></div>
-            <div class="form-group"><label>Harga (Rp)</label><input type="number" id="adm-price" class="form-control" required></div>
-            <div class="form-group"><label>URL Gambar</label><input type="url" id="adm-img" class="form-control" required></div>
-            <button type="submit" class="btn btn-primary">Simpan Barang</button>
-          </form>`;
-      } else if (tab === 'orders') {
-        box.innerHTML = `
-          <h4>Riwayat Pembelian & Kontrol Status Pengiriman</h4>
-          <table>
-            <tr><th>Tanggal</th><th>Pembeli</th><th>Produk</th><th>Total</th><th>Status</th><th>Aksi</th></tr>
-            ${orders.map((o, idx) => `
-              <tr>
-                <td>${o.date}</td>
-                <td>${o.user}<br><span style="font-size:9px;color:gray;">${o.address}</span></td>
-                <td>${o.product}</td>
-                <td>Rp${o.total.toLocaleString()}<br>(${o.payment})</td>
-                <td style="font-weight:700; color:var(--accent);">${o.status}</td>
-                <td>
-                  <select class="form-control" style="padding:4px; font-size:10px;" onchange="updateStatus(${idx}, this.value)">
-                    <option ${o.status==='Dikemas'?'selected':''}>Dikemas</option>
-                    <option ${o.status==='Dikirim'?'selected':''}>Dikirim</option>
-                    <option ${o.status==='Selesai'?'selected':''}>Selesai</option>
-                  </select>
-                </td>
-              </tr>`).join('')}
-          </table>`;
-      } else if (tab === 'supplier') {
-        box.innerHTML = `<h4>Edit / Input Supplier</h4><p style="font-size:12px; color:var(--text-light); margin-top:6px;">Fitur data supplier aktif.</p>`;
-      } else if (tab === 'view') {
-        box.innerHTML = `<h4>View & Ubah Harga Barang</h4><p style="font-size:12px; color:var(--text-light); margin-top:6px;">Total produk terdaftar: ${products.length}</p>`;
-      } else if (tab === 'report') {
-        const rev = orders.reduce((a,b)=>a+b.total,0);
-        box.innerHTML = `<h4>Laporan Penjualan</h4><p style="font-size:14px; font-weight:700; color:var(--accent); margin-top:6px;">Total Pendapatan: Rp${rev.toLocaleString()}</p>`;
-      }
-    }
-
-    function handleInputProduct(e) {
-      e.preventDefault();
-      products.push({
-        id: products.length + 1,
-        name: document.getElementById('adm-name').value,
-        price: parseInt(document.getElementById('adm-price').value),
-        rating: 5.0, sold: 0,
-        image: document.getElementById('adm-img').value
-      });
-      showToast('Produk berhasil ditambahkan!');
-      renderProducts();
-      switchView('admin-menu');
-    }
-
-    function updateStatus(idx, val) {
-      orders[idx].status = val;
-      showToast('Status pesanan diperbarui!');
-      switchAdminTab('orders');
-    }
-
-    function openLogoutModal() {
-      currentUser = null;
-      document.getElementById('onboarding-overlay').style.display = 'flex';
-      switchView('home');
-      showToast('Berhasil logout');
-    }
-  </script>
-</body>
-</html>
+  <!-- VIEW 4: ORDERS (STATUS P
