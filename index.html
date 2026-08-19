@@ -4,13 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rara Cosmetics</title>
-  <!-- Feather Icons -->
   <script src="https://unpkg.com/feather-icons"></script>
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    /* RESET & BASE STYLES */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -44,24 +41,10 @@
       padding-bottom: 70px;
     }
 
-    button {
-      cursor: pointer;
-      border: none;
-      outline: none;
-      font-family: inherit;
-    }
+    button { cursor: pointer; border: none; outline: none; font-family: inherit; }
+    input, select, textarea { font-family: inherit; outline: none; }
+    a { text-decoration: none; color: inherit; }
 
-    input, select, textarea {
-      font-family: inherit;
-      outline: none;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    /* TOAST NOTIFICATION */
     #toast {
       position: fixed;
       top: -60px;
@@ -83,18 +66,15 @@
       align-items: center;
       gap: 10px;
     }
-    #toast.show {
-      top: 20px;
-    }
+    #toast.show { top: 20px; }
 
-    /* HEADER */
     .header {
       position: sticky;
       top: 0;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
+      background: var(--accent);
+      color: white;
       z-index: 100;
-      padding: 14px 20px;
+      padding: 16px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -103,31 +83,16 @@
     .header .logo {
       font-size: 20px;
       font-weight: 700;
-      color: var(--accent);
       letter-spacing: -0.5px;
     }
-    .header .role-badge {
-      font-size: 10px;
-      background: var(--secondary);
-      color: var(--accent);
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-weight: 700;
-      margin-left: 6px;
-      text-transform: uppercase;
-    }
 
-    /* BOTTOM NAVIGATION */
     .bottom-nav {
       position: fixed;
-      bottom: 0;
-      left: 50%;
+      bottom: 0; left: 50%;
       transform: translateX(-50%);
-      width: 100%;
-      max-width: 480px;
+      width: 100%; max-width: 480px;
       background: var(--surface);
-      display: flex;
-      justify-content: space-around;
+      display: flex; justify-content: space-around;
       padding: 10px 0;
       box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
       border-top-left-radius: 20px;
@@ -135,1533 +100,399 @@
       z-index: 100;
     }
     .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 11px;
-      color: var(--text-light);
-      background: none;
-      position: relative;
+      display: flex; flex-direction: column; align-items: center;
+      font-size: 11px; color: var(--text-light); background: none; position: relative;
     }
-    .nav-item.active {
-      color: var(--accent);
-      font-weight: 700;
-    }
-    .nav-item i {
-      margin-bottom: 4px;
-      width: 20px;
-      height: 20px;
-    }
-    .badge {
-      position: absolute;
-      top: -2px;
-      right: 4px;
-      background: var(--accent);
-      color: white;
-      font-size: 10px;
-      padding: 2px 5px;
-      border-radius: 10px;
-      font-weight: 700;
-    }
+    .nav-item.active { color: var(--accent); font-weight: 700; }
+    .nav-item i { margin-bottom: 4px; width: 20px; height: 20px; }
 
-    /* VIEWS */
-    .view {
-      display: none;
-      padding: 16px;
-      animation: fadeIn 0.3s ease;
-    }
-    .view.active {
-      display: block;
-    }
+    .view { display: none; padding: 16px; animation: fadeIn 0.3s ease; }
+    .view.active { display: block; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ONBOARDING / LOGIN OVERLAY */
     #onboarding-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--bg);
-      z-index: 1000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--bg); z-index: 1000;
+      display: flex; justify-content: center; align-items: center; padding: 20px;
     }
     .onboarding-card {
-      background: var(--surface);
-      border-radius: 24px;
-      padding: 28px 24px;
-      width: 100%;
-      max-width: 400px;
+      background: var(--surface); border-radius: 24px; padding: 28px 24px; width: 100%; max-width: 400px;
       box-shadow: var(--shadow);
     }
-    .role-tabs {
-      display: flex;
-      background: var(--secondary);
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 20px;
-    }
+    .role-tabs { display: flex; background: var(--secondary); border-radius: 12px; padding: 4px; margin-bottom: 20px; }
     .role-btn {
-      flex: 1;
-      padding: 10px;
-      text-align: center;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      background: transparent;
-      transition: 0.3s;
+      flex: 1; padding: 10px; text-align: center; border-radius: 10px; font-size: 13px; font-weight: 600;
+      color: var(--text); background: transparent; transition: 0.3s;
     }
-    .role-btn.active {
-      background: var(--surface);
-      color: var(--accent);
-      box-shadow: var(--shadow-sm);
-    }
-    .step-indicator {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 20px;
-    }
-    .step-dot {
-      flex: 1;
-      height: 4px;
-      background: var(--secondary);
-      border-radius: 2px;
-    }
-    .step-dot.active {
-      background: var(--accent);
-    }
+    .role-btn.active { background: var(--surface); color: var(--accent); box-shadow: var(--shadow-sm); }
 
-    /* FORM COMPONENTS */
-    .form-group {
-      margin-bottom: 16px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: var(--text);
-    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
     .form-control {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: 1px solid #f0f0f0;
-      background: #FAFAFA;
-      font-size: 14px;
-      transition: 0.3s;
+      width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #f0f0f0; background: #FAFAFA; font-size: 14px;
     }
-    .form-control:focus {
-      border-color: var(--primary);
-      background: var(--surface);
-      box-shadow: 0 0 0 3px var(--secondary);
-    }
+    .form-control:focus { border-color: var(--primary); background: var(--surface); }
 
-    /* BUTTONS */
     .btn {
-      width: 100%;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: 0.2s;
+      width: 100%; padding: 12px 18px; border-radius: 12px; font-weight: 600; font-size: 14px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-primary {
-      background: var(--accent);
-      color: white;
-    }
-    .btn-primary:active {
-      background: var(--accent-dark);
-    }
-    .btn-secondary {
-      background: var(--secondary);
-      color: var(--accent);
-    }
-    .btn-outline {
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      background: transparent;
-    }
-    .btn-sm {
-      padding: 6px 12px;
-      font-size: 12px;
-      border-radius: 8px;
-    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-secondary { background: var(--secondary); color: var(--accent); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; width: auto; }
 
-    /* HOME COMPONENTS */
     .hero-banner {
       background: linear-gradient(135deg, var(--primary), var(--accent));
-      border-radius: var(--radius);
-      padding: 20px;
-      color: white;
-      margin-bottom: 20px;
+      border-radius: var(--radius); padding: 20px; color: white; margin-bottom: 20px;
     }
     .hero-banner h2 { font-size: 20px; margin-bottom: 4px; }
     .hero-banner p { font-size: 12px; opacity: 0.9; }
 
-    .section-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .horizontal-scroll {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-      scrollbar-width: none;
-    }
-    .horizontal-scroll::-webkit-scrollbar { display: none; }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
+    .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+    .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
     .product-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 10px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      position: relative;
+      background: var(--surface); border-radius: var(--radius); padding: 10px;
+      box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
     }
-    .product-card img {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 8px;
-    }
-    .product-title {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      line-height: 1.3;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .product-price {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 4px;
-    }
-    .product-meta {
-      font-size: 10px;
-      color: var(--text-light);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-    .product-actions {
-      margin-top: auto;
-      display: flex;
-      gap: 6px;
-    }
-
-    /* PRODUCT DETAIL VIEW */
-    .detail-img {
-      width: 100%;
-      height: 280px;
-      object-fit: cover;
-      border-radius: var(--radius);
-      margin-bottom: 16px;
-    }
-    .variant-group {
-      margin: 14px 0;
-    }
-    .variant-group label {
-      font-size: 12px;
-      font-weight: 600;
-      display: block;
-      margin-bottom: 6px;
-    }
-    .variant-options {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .variant-btn {
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: 1px solid #e0e0e0;
-      background: var(--surface);
-      font-size: 12px;
-    }
-    .variant-btn.selected {
-      border-color: var(--accent);
-      background: var(--secondary);
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    /* CART & CHECKOUT */
-    .cart-item {
-      display: flex;
-      gap: 12px;
-      background: var(--surface);
-      padding: 12px;
-      border-radius: var(--radius);
-      margin-bottom: 10px;
-      align-items: center;
-      box-shadow: var(--shadow-sm);
-    }
-    .cart-item img {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-    .cart-info {
-      flex: 1;
-    }
-    .cart-title { font-size: 13px; font-weight: 600; }
-    .cart-variant { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
-    .qty-cnt {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .qty-btn {
-      width: 24px;
-      height: 24px;
-      border-radius: 6px;
-      background: var(--secondary);
-      color: var(--accent);
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .product-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
+    .product-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .product-price { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+    .product-meta { font-size: 10px; color: var(--text-light); margin-bottom: 8px; }
 
     .summary-card {
-      background: var(--surface);
-      padding: 16px;
-      border-radius: var(--radius);
-      margin-top: 16px;
-      box-shadow: var(--shadow-sm);
+      background: var(--surface); padding: 16px; border-radius: var(--radius); margin-top: 16px; box-shadow: var(--shadow-sm);
     }
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-    .summary-row.total {
-      font-weight: 700;
-      font-size: 15px;
-      border-top: 1px dashed #eee;
-      padding-top: 8px;
-      color: var(--accent);
-    }
+    .summary-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+    .summary-row.total { font-weight: 700; font-size: 15px; border-top: 1px dashed #eee; padding-top: 8px; color: var(--accent); }
 
-    /* PROFILE & ORDERS */
-    .profile-card {
-      background: var(--surface);
-      padding: 20px;
-      border-radius: var(--radius);
-      text-align: center;
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 16px;
+    .payment-option {
+      border: 2px solid #eee; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.2s;
     }
-    .avatar {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 8px;
-      border: 2px solid var(--primary);
-    }
+    .payment-option.selected { border-color: var(--accent); background: var(--secondary); }
 
-    .timeline {
-      display: flex;
-      justify-content: space-between;
-      margin: 16px 0;
-      position: relative;
+    .admin-menu-btn {
+      width: 100%; background: var(--surface); border: 1px solid #eee; padding: 14px; border-radius: 12px;
+      font-weight: 600; text-align: left; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; color: var(--text);
     }
-    .timeline::before {
-      content: '';
-      position: absolute;
-      top: 12px;
-      left: 10%;
-      right: 10%;
-      height: 2px;
-      background: #eee;
-      z-index: 1;
-    }
-    .timeline-step {
-      position: relative;
-      z-index: 2;
-      background: var(--bg);
-      padding: 0 4px;
-      text-align: center;
-      font-size: 10px;
-    }
-    .timeline-icon {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #eee;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 4px;
-    }
-    .timeline-step.active .timeline-icon {
-      background: var(--accent);
-      color: white;
-    }
+    .admin-menu-btn:hover { background: var(--secondary); color: var(--accent); }
 
-    /* ADMIN TABS & DASHBOARD */
-    .admin-menu-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-      margin-bottom: 16px;
-    }
-    .admin-tab-btn {
-      padding: 8px 2px;
-      background: var(--surface);
-      border: 1px solid #eee;
-      border-radius: 10px;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      transition: 0.2s;
-    }
-    .admin-tab-btn.active {
-      background: var(--secondary);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    .report-subtabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-    .subtab-btn {
-      flex: 1;
-      padding: 8px;
-      border-radius: 8px;
-      background: #f0f0f0;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-light);
-    }
-    .subtab-btn.active {
-      background: var(--accent);
-      color: white;
-    }
-
-    /* MODAL */
-    .modal {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .modal.active { display: flex; }
-    .modal-content {
-      background: var(--surface);
-      padding: 20px;
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 360px;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
+    th, td { border: 1px solid #eee; padding: 8px; text-align: left; }
+    th { background: var(--secondary); color: var(--accent); }
   </style>
 </head>
 <body>
 
-  <!-- TOAST NOTIFICATION -->
   <div id="toast"><i data-feather="info"></i> <span id="toast-text">Pesan</span></div>
 
-  <!-- HEADER STICKY -->
   <header class="header">
-    <div style="display: flex; align-items: center;">
-      <span class="logo">Rara.</span>
-      <span class="role-badge" id="header-role-badge">Pelanggan</span>
-    </div>
-    <div id="header-right">
-      <button onclick="switchView('cart')" style="background:none; position:relative;">
-        <i data-feather="shopping-bag" style="color:var(--text)"></i>
-        <span class="badge" id="cart-badge" style="display:none;">0</span>
-      </button>
-    </div>
+    <div class="logo">RARA COSMETICS</div>
+    <button onclick="openLogoutModal()" style="background:rgba(255,255,255,0.2); color:white; padding:6px 12px; border-radius:8px; font-size:12px;">Logout</button>
   </header>
 
-  <!-- ONBOARDING & LOGIN OVERLAY -->
+  <!-- ONBOARDING LOGIN -->
   <div id="onboarding-overlay">
     <div class="onboarding-card">
       <div style="text-align: center; margin-bottom: 20px;">
         <h2 style="color: var(--accent);">Rara Cosmetics</h2>
-        <p style="font-size: 12px; color: var(--text-light);">Selamat Datang di Beauty & Skincare Store</p>
+        <p style="font-size: 12px; color: var(--text-light);">Original Beauty & Skincare Store</p>
       </div>
 
-      <!-- ROLE SELECTOR -->
       <div class="role-tabs">
         <button class="role-btn active" id="btn-role-customer" onclick="setRole('customer')">Pelanggan</button>
         <button class="role-btn" id="btn-role-admin" onclick="setRole('admin')">Admin</button>
       </div>
 
-      <!-- CUSTOMER MULTI-STEP ONBOARDING -->
-      <div id="customer-flow">
-        <div class="step-indicator">
-          <div class="step-dot active" id="dot-1"></div>
-          <div class="step-dot" id="dot-2"></div>
-          <div class="step-dot" id="dot-3"></div>
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group" id="group-username">
+          <label>Nama / Username</label>
+          <input type="text" id="input-user" class="form-control" placeholder="Masukkan nama Anda" required>
         </div>
-
-        <form id="form-customer" onsubmit="handleCustomerSubmit(event)">
-          <!-- STEP 1 -->
-          <div id="step-1">
-            <div class="form-group">
-              <label>Email Pengguna</label>
-              <input type="email" id="cust-email" class="form-control" placeholder="contoh@gmail.com" required>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="nextStep(2)">Lanjut <i data-feather="arrow-right"></i></button>
-          </div>
-
-          <!-- STEP 2 -->
-          <div id="step-2" style="display: none;">
-            <div class="form-group">
-              <label>Username</label>
-              <input type="text" id="cust-username" class="form-control" placeholder="Username Anda" required>
-            </div>
-            <div class="form-group">
-              <label>Password</label>
-              <input type="password" id="cust-password" class="form-control" placeholder="••••••••" required>
-            </div>
-            <div style="display: flex; gap: 8px;">
-              <button type="button" class="btn btn-secondary" onclick="nextStep(1)">Kembali</button>
-              <button type="button" class="btn btn-primary" onclick="nextStep(3)">Lanjut</button>
-            </div>
-          </div>
-
-          <!-- STEP 3 -->
-          <div id="step-3" style="display: none;">
-            <div class="form-group">
-              <label>Nomor Telepon</label>
-              <input type="tel" id="cust-phone" class="form-control" placeholder="08123456789" required>
-            </div>
-            <div style="display: flex; gap: 8px;">
-              <button type="button" class="btn btn-secondary" onclick="nextStep(2)">Kembali</button>
-              <button type="submit" class="btn btn-primary">Mulai Belanja</button>
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <!-- ADMIN LOGIN FLOW -->
-      <div id="admin-flow" style="display: none;">
-        <form onsubmit="handleAdminSubmit(event)">
-          <div class="form-group">
-            <label>Username Admin</label>
-            <input type="text" id="admin-username" class="form-control" value="admin" required>
-          </div>
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="admin-password" class="form-control" value="admin123" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Masuk Portal Admin</button>
-        </form>
-      </div>
-
+        <div class="form-group" id="group-address">
+          <label>Alamat Pengiriman</label>
+          <textarea id="input-addr" class="form-control" placeholder="Alamat lengkap..." rows="2"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btn-login-submit">Masuk Aplikasi</button>
+      </form>
     </div>
   </div>
 
-  <!-- VIEW 1: HOME (CUSTOMER) -->
+  <!-- VIEW: HOME / KATALOG -->
   <div id="view-home" class="view active">
     <div class="hero-banner">
       <h2>Glow Up Bersama Rara</h2>
-      <p>Koleksi kosmetik & skincare original terlengkap!</p>
+      <p>Pilih produk kecantikan favoritmu hari ini!</p>
     </div>
+    <div class="section-title">Katalog Produk (10 Pilihan) ✨</div>
+    <div class="product-grid" id="product-grid-container"></div>
+  </div>
 
-    <!-- BEST SELLER HORIZONTAL -->
-    <div class="section-title">
-      <span>Best Seller ✨</span>
-    </div>
-    <div class="horizontal-scroll" id="best-seller-container">
-      <!-- Injected by JS -->
-    </div>
+  <!-- VIEW: DETAIL PRODUK & CHECKOUT -->
+  <div id="view-checkout" class="view">
+    <button onclick="switchView('home')" class="btn btn-secondary btn-sm" style="margin-bottom: 12px;">← Kembali</button>
+    <div class="summary-card" style="margin-top:0;">
+      <h4 style="margin-bottom: 10px; color:var(--accent);">Konfirmasi Pesanan</h4>
+      <div style="font-size:12px; margin-bottom:12px;">
+        <strong>Alamat Pengiriman:</strong>
+        <div id="checkout-address" style="color:var(--text-light); margin-top:2px;"></div>
+      </div>
 
-    <!-- KOLEKSI PILIHAN GRID -->
-    <div class="section-title" style="margin-top: 16px;">
-      <span>Koleksi Pilihan</span>
-    </div>
-    <div class="product-grid" id="product-grid-container">
-      <!-- Injected by JS -->
+      <label style="font-size:12px; font-weight:600; display:block; margin-bottom:6px;">Metode Pembayaran:</label>
+      <div style="display:flex; gap:10px; margin-bottom:12px;">
+        <div class="payment-option selected" id="opt-cod" onclick="selectPayment('COD')">
+          <i data-feather="dollar-sign"></i> <div><strong>COD</strong><div style="font-size:10px; color:var(--text-light);">Bayar di Tempat</div></div>
+        </div>
+        <div class="payment-option" id="opt-qris" onclick="selectPayment('QRIS')">
+          <i data-feather="grid"></i> <div><strong>QRIS</strong><div style="font-size:10px; color:var(--text-light);">Scan Barcode</div></div>
+        </div>
+      </div>
+
+      <div id="qris-container" style="display:none; text-align:center; background:#fafafa; padding:12px; border-radius:12px; margin-bottom:12px; border:1px dashed var(--accent);">
+        <p style="font-size:11px; margin-bottom:6px; font-weight:600;">Scan QRIS Untuk Membayar:</p>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=RaraCosmeticsQRIS" style="width:120px; height:120px;">
+        <p style="font-size:9px; color:var(--text-light); margin-top:4px;">Mendukung GoPay, OVO, Dana, ShopeePay, BCA, dll.</p>
+      </div>
+
+      <div style="border-top:1px solid #eee; padding-top:8px;">
+        <div class="summary-row"><span id="co-prod-name">Produk</span><span id="co-prod-price">Rp0</span></div>
+        <div class="summary-row"><span>Ongkos Kirim (Flat):</span><span>Rp5.000</span></div>
+        <div class="summary-row total"><span>Total Tagihan:</span><span id="co-total">Rp0</span></div>
+      </div>
+
+      <button class="btn btn-primary" style="margin-top:14px;" onclick="finalizeCheckout()">Klik Checkout</button>
     </div>
   </div>
 
-  <!-- VIEW 2: PRODUCT DETAIL -->
-  <div id="view-detail" class="view">
-    <button onclick="switchView('home')" class="btn btn-secondary btn-sm" style="margin-bottom: 12px; width: auto;">
-      <i data-feather="arrow-left"></i> Kembali
-    </button>
-    <div id="detail-content">
-      <!-- Injected by JS -->
-    </div>
-  </div>
-
-  <!-- VIEW 3: CART & CHECKOUT -->
-  <div id="view-cart" class="view">
-    <h3 style="margin-bottom: 12px;">Keranjang Belanja</h3>
-    <div id="cart-list">
-      <!-- Injected by JS -->
-    </div>
-
-    <div class="summary-card" id="cart-summary">
-      <!-- Injected by JS -->
-    </div>
-  </div>
-
-  <!-- VIEW 4: ORDERS (STATUS PESANAN) -->
+  <!-- VIEW: CUSTOMER ORDERS (RIWAYAT) -->
   <div id="view-orders" class="view">
-    <h3 style="margin-bottom: 12px;">Status Pesanan Anda</h3>
-    <div id="orders-list">
-      <!-- Injected by JS -->
-    </div>
+    <h3 style="margin-bottom: 12px;">Status Pesanan Saya</h3>
+    <div id="customer-orders-list"></div>
   </div>
 
-  <!-- VIEW 5: PROFILE (CUSTOMER) -->
-  <div id="view-profile" class="view">
-    <div class="profile-card">
-      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="avatar" alt="Profile">
-      <h3 id="profile-name">Nama User</h3>
-      <span class="role-badge" style="display:inline-block; margin-top:4px;">Beauty Member</span>
-      
-      <div style="display: flex; justify-content: space-around; margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px;">
-        <div>
-          <div style="font-weight: 700; color: var(--accent);" id="prof-order-count">0</div>
-          <div style="font-size: 11px; color: var(--text-light);">Pesanan</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="summary-card" style="margin-top: 0;">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="text" id="prof-email" class="form-control" readonly>
-      </div>
-      <div class="form-group">
-        <label>Nomor Telepon</label>
-        <input type="text" id="prof-phone" class="form-control" readonly>
-      </div>
-      <div class="form-group">
-        <label>Alamat Pengiriman</label>
-        <textarea id="prof-address" class="form-control" rows="2">Jl. Beauty Mawar No. 12, Jakarta</textarea>
-      </div>
-      <button class="btn btn-outline btn-sm" style="margin-bottom: 8px;" onclick="showToast('Alamat berhasil diperbarui!')">Simpan Profil</button>
-      <button class="btn btn-secondary btn-sm" style="color: red;" onclick="openModal('logout-modal')">Logout</button>
-    </div>
+  <!-- VIEW: ADMIN MENU UTAMA -->
+  <div id="view-admin-menu" class="view">
+    <h3 style="margin-bottom: 14px;">Menu Utama Admin</h3>
+    <button class="admin-menu-btn" onclick="switchAdminTab('input')"><i data-feather="plus-circle"></i> Dashboard & Input Barang</button>
+    <button class="admin-menu-btn" onclick="switchAdminTab('supplier')"><i data-feather="truck"></i> Edit / Input Supplier</button>
+    <button class="admin-menu-btn" onclick="switchAdminTab('view')"><i data-feather="tag"></i> View & Ubah Harga Barang</button>
+    <button class="admin-menu-btn" onclick="switchAdminTab('orders')"><i data-feather="shopping-bag"></i> Lihat Pembelian & Kontrol Status</button>
+    <button class="admin-menu-btn" onclick="switchAdminTab('report')"><i data-feather="file-text"></i> Laporan Penjualan</button>
   </div>
 
-  <!-- VIEW 6: ADMIN DASHBOARD -->
-  <div id="view-admin" class="view">
-    <h3 style="margin-bottom: 14px;">Dashboard Admin</h3>
-
-    <!-- ADMIN MENU GRID -->
-    <div class="admin-menu-grid">
-      <button class="admin-tab-btn active" id="tab-btn-input" onclick="switchAdminSection('input')">
-        <i data-feather="plus-circle"></i>
-        <span>Input/Edit</span>
-      </button>
-      <button class="admin-tab-btn" id="tab-btn-view" onclick="switchAdminSection('view')">
-        <i data-feather="grid"></i>
-        <span>Daftar</span>
-      </button>
-      <button class="admin-tab-btn" id="tab-btn-price" onclick="switchAdminSection('price')">
-        <i data-feather="tag"></i>
-        <span>Harga</span>
-      </button>
-      <button class="admin-tab-btn" id="tab-btn-supplier" onclick="switchAdminSection('supplier')">
-        <i data-feather="truck"></i>
-        <span>Supplier</span>
-      </button>
-      <button class="admin-tab-btn" id="tab-btn-report" onclick="switchAdminSection('report')">
-        <i data-feather="file-text"></i>
-        <span>Pembelian</span>
-      </button>
-    </div>
-
-    <!-- SECTION 1: INPUT & EDIT BARANG -->
-    <div id="admin-sec-input" class="summary-card" style="margin-top: 0;">
-      <h4 style="margin-bottom: 12px;" id="form-title-text">Form Input Barang Baru</h4>
-      <form onsubmit="handleSaveProduct(event)">
-        <input type="hidden" id="adm-p-id">
-        <div class="form-group">
-          <label>Nama Barang</label>
-          <input type="text" id="adm-p-name" class="form-control" placeholder="Contoh: G2G Airy Cushion" required>
-        </div>
-        <div class="form-group">
-          <label>Harga (Rp)</label>
-          <input type="number" id="adm-p-price" class="form-control" placeholder="120000" required>
-        </div>
-        <div class="form-group">
-          <label>URL Gambar Barang</label>
-          <input type="url" id="adm-p-img" class="form-control" placeholder="https://..." required>
-        </div>
-        <div class="form-group">
-          <label>Variasi Warna/Shade (Pisahkan koma)</label>
-          <input type="text" id="adm-p-shades" class="form-control" placeholder="Light, Medium, Warm" required>
-        </div>
-        <div class="form-group">
-          <label>Variasi Ukuran (Pisahkan koma)</label>
-          <input type="text" id="adm-p-sizes" class="form-control" placeholder="15 g, 30 ml" required>
-        </div>
-        <div style="display: flex; gap: 8px;">
-          <button type="submit" class="btn btn-primary btn-sm" id="btn-save-product">Simpan Ke Katalog</button>
-          <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-edit" style="display:none;" onclick="resetProductForm()">Batal</button>
-        </div>
-      </form>
-    </div>
-
-    <!-- SECTION 2: VIEW BARANG -->
-    <div id="admin-sec-view" class="summary-card" style="margin-top: 0; display: none;">
-      <h4 style="margin-bottom: 12px;">Kelola Katalog Barang</h4>
-      <div id="admin-product-list">
-        <!-- Injected by JS -->
-      </div>
-    </div>
-
-    <!-- SECTION 3: VIEW HARGA BARANG -->
-    <div id="admin-sec-price" class="summary-card" style="margin-top: 0; display: none;">
-      <h4 style="margin-bottom: 12px;">Daftar Harga Produk</h4>
-      <div id="admin-price-list">
-        <!-- Injected by JS -->
-      </div>
-    </div>
-
-    <!-- SECTION 4: SUPPLIER -->
-    <div id="admin-sec-supplier" class="summary-card" style="margin-top: 0; display: none;">
-      <h4 style="margin-bottom: 12px;">Daftar Supplier Kosmetik</h4>
-      <div id="admin-supplier-list">
-        <!-- Injected by JS -->
-      </div>
-    </div>
-
-    <!-- SECTION 5: LIHAT PEMBELIAN (LAPORAN) -->
-    <div id="admin-sec-report" class="summary-card" style="margin-top: 0; display: none;">
-      <h4 style="margin-bottom: 10px;">Lihat Pembelian Pelanggan</h4>
-      
-      <!-- REPORT SUB-TABS -->
-      <div class="report-subtabs">
-        <button class="subtab-btn active" id="subtab-daily" onclick="switchReportTab('daily')">Harian</button>
-        <button class="subtab-btn" id="subtab-monthly" onclick="switchReportTab('monthly')">Bulanan</button>
-        <button class="subtab-btn" id="subtab-yearly" onclick="switchReportTab('yearly')">Tahunan</button>
-      </div>
-
-      <!-- REPORT CONTENT DISPLAY -->
-      <div id="report-content">
-        <!-- Injected by JS -->
-      </div>
-    </div>
-
-    <button class="btn btn-secondary btn-sm" style="margin-top: 16px; color: red;" onclick="openModal('logout-modal')">Logout Admin</button>
+  <!-- VIEW: ADMIN SUB-PAGES -->
+  <div id="view-admin-sub" class="view">
+    <button onclick="switchView('admin-menu')" class="btn btn-secondary btn-sm" style="margin-bottom: 12px;">← Menu Admin</button>
+    <div class="summary-card" id="admin-sub-content" style="margin-top:0;"></div>
   </div>
 
-  <!-- BOTTOM NAVIGATION BAR -->
+  <!-- BOTTOM NAV (CUSTOMER) -->
   <nav class="bottom-nav" id="customer-nav">
-    <button class="nav-item active" onclick="switchView('home')">
-      <i data-feather="home"></i>
-      <span>Beranda</span>
-    </button>
-    <button class="nav-item" onclick="switchView('orders')">
-      <i data-feather="shopping-bag"></i>
-      <span>Pesanan</span>
-    </button>
-    <button class="nav-item" onclick="switchView('profile')">
-      <i data-feather="user"></i>
-      <span>Profil</span>
-    </button>
+    <button class="nav-item active" onclick="switchView('home')"><i data-feather="home"></i><span>Beranda</span></button>
+    <button class="nav-item" onclick="switchView('orders')"><i data-feather="shopping-bag"></i><span>Pesanan</span></button>
   </nav>
 
-  <!-- LOGOUT MODAL -->
-  <div class="modal" id="logout-modal">
-    <div class="modal-content">
-      <h4 style="margin-bottom: 8px;">Konfirmasi Logout</h4>
-      <p style="font-size: 13px; color: var(--text-light); margin-bottom: 16px;">Apakah Anda yakin ingin keluar? Seluruh data sesi saat ini akan direset.</p>
-      <div style="display: flex; gap: 8px;">
-        <button class="btn btn-secondary btn-sm" onclick="closeModal('logout-modal')">Batal</button>
-        <button class="btn btn-primary btn-sm" onclick="performLogout()">Ya, Logout</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- JAVASCRIPT APP LOGIC -->
   <script>
-    // 10 PRODUK SESUAI PERMINTAAN
     let products = [
-      {
-        id: 1,
-        name: "G2G Airy Cushion Pink",
-        price: 129000,
-        rating: 4.9,
-        sold: 1420,
-        image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500",
-        desc: "Cushion airy ringan di wajah dengan hasil akhir flawless glow seharian.",
-        shades: ["01 Light", "02 Medium", "03 Beige"],
-        sizes: ["15 g"],
-        isBestSeller: true
-      },
-      {
-        id: 2,
-        name: "Hanasui Serum Cushion",
-        price: 65000,
-        rating: 4.8,
-        sold: 3800,
-        image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500",
-        desc: "Cushion dengan kandungan serum menutrisi kulit sekaligus meratakan warna kulit.",
-        shades: ["101 Light", "102 Natural", "103 Tinted"],
-        sizes: ["15 g"],
-        isBestSeller: true
-      },
-      {
-        id: 3,
-        name: "Implora Urban Lip Cream",
-        price: 28000,
-        rating: 4.7,
-        sold: 5200,
-        image: "https://images.unsplash.com/photo-1631214524020-7e18db9a8f92?w=500",
-        desc: "Lip cream matte favorit tahan lama dan tidak membuat bibir kering.",
-        shades: ["01 Dusky Nude", "02 Terra Cotta", "03 Dark Berry"],
-        sizes: ["4 ml"],
-        isBestSeller: true
-      },
-      {
-        id: 4,
-        name: "Wardah Colorfit Velvet Lip Mousse",
-        price: 75000,
-        rating: 4.8,
-        sold: 1950,
-        image: "https://images.unsplash.com/photo-1590156546946-ce55a12a6a5d?w=500",
-        desc: "Lip mousse tekstur lembut seperti velvet berikan kenyamanan seharian di bibir.",
-        shades: ["01 Brown Dreamer", "02 Joyful Orange", "03 Rose Indeed"],
-        sizes: ["4 g"],
-        isBestSeller: false
-      },
-      {
-        id: 5,
-        name: "Emina Cheeklit Blush",
-        price: 40000,
-        rating: 4.9,
-        sold: 2300,
-        image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=500",
-        desc: "Blush on praktis memberikan rona alami pada pipi dengan sentuhan segar.",
-        shades: ["Pink", "Violet", "Cherry"],
-        sizes: ["3.5 g"],
-        isBestSeller: false
-      },
-      {
-        id: 6,
-        name: "Wardah Colorfit Powder Foundation",
-        price: 89000,
-        rating: 4.8,
-        sold: 1100,
-        image: "https://images.unsplash.com/photo-1631214500115-598fc2cb8d2d?w=500",
-        desc: "Kombinasi bedak dan foundation untuk coverage maksimal dan menyamarkan pori.",
-        shades: ["Light Ivory", "Natural", "Warm Beige"],
-        sizes: ["12 g"],
-        isBestSeller: false
-      },
-      {
-        id: 7,
-        name: "Skintific 5X Ceramide Moisturizer",
-        price: 139000,
-        rating: 5.0,
-        sold: 4500,
-        image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500",
-        desc: "Pelembap wajah memperbaiki skin barrier dengan 5 jenis ceramide.",
-        shades: ["All Skin Types"],
-        sizes: ["30 g", "80 g"],
-        isBestSeller: true
-      },
-      {
-        id: 8,
-        name: "Hada Labo Gokujyun Face Wash",
-        price: 48000,
-        rating: 4.8,
-        sold: 2100,
-        image: "https://images.unsplash.com/photo-1608248597260-2fe84f23b7e4?w=500",
-        desc: "Pembersih wajah dengan kombinasi hyaluronic acid untuk kelembapan ekstra.",
-        shades: ["Ultimate Moisturizing"],
-        sizes: ["100 g"],
-        isBestSeller: false
-      },
-      {
-        id: 9,
-        name: "Azarine Hydrasoothe Sunscreen Gel",
-        price: 65000,
-        rating: 4.9,
-        sold: 6400,
-        image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=500",
-        desc: "Tabir surya bentuk gel SPF45 PA++++ ringan, dingin, dan bebas alkohol.",
-        shades: ["Cooling Gel"],
-        sizes: ["50 ml"],
-        isBestSeller: true
-      },
-      {
-        id: 10,
-        name: "Pinkflash Eyeshadow Palette",
-        price: 59000,
-        rating: 4.7,
-        sold: 980,
-        image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500",
-        desc: "Palette eyeshadow bernuansa pink & peach sangat mudah dibaurkan.",
-        shades: ["Rosy Peach", "Romantic Amber"],
-        sizes: ["10 g"],
-        isBestSeller: false
-      }
-    ];
-
-    // DATA SUPPLIER
-    let suppliers = [
-      { id: "SPL-01", name: "PT Glow Indo Kosmetik", contact: "081299887766", address: "Jl. Industri Raya No. 45, Jakarta" },
-      { id: "SPL-02", name: "CV Skincare Nusantara", contact: "085644332211", address: "Jl. Rungkut Industri No. 12, Surabaya" },
-      { id: "SPL-03", name: "UD Cantik Berseri", contact: "081322114455", address: "Jl. Malioboro No. 88, Yogyakarta" }
+      { id: 1, name: "G2G Airy Cushion Pink", price: 129000, rating: 4.9, sold: 1420, image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500" },
+      { id: 2, name: "Hanasui Serum Cushion", price: 65000, rating: 4.8, sold: 3800, image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" },
+      { id: 3, name: "Skintific Moisturizer", price: 139000, rating: 5.0, sold: 4500, image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500" },
+      { id: 4, name: "Wardah Matte Lip Cream", price: 62000, rating: 4.7, sold: 2100, image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" },
+      { id: 5, name: "Emina Bright Stuff Face Wash", price: 28000, rating: 4.9, sold: 5600, image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500" },
+      { id: 6, name: "Somethinc Niacinamide Serum", price: 115000, rating: 4.9, sold: 3100, image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500" },
+      { id: 7, name: "Azarine Sunscreen Gel", price: 65000, rating: 5.0, sold: 7200, image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" },
+      { id: 8, name: "Make Over Eyeshadow Palette", price: 185000, rating: 4.8, sold: 950, image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500" },
+      { id: 9, name: "Pixy Concealing Base", price: 40000, rating: 4.6, sold: 1800, image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500" },
+      { id: 10, name: "Implora Jelly Tint", price: 22000, rating: 4.8, sold: 4300, image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500" }
     ];
 
     let orders = [
-      {
-        id: "#RRC-849201",
-        items: [{ name: "G2G Airy Cushion Pink", shade: "01 Light", size: "15 g", qty: 1, price: 129000 }],
-        total: 149000,
-        status: "Selesai",
-        date: "2026-08-07"
-      },
-      {
-        id: "#RRC-302194",
-        items: [{ name: "Skintific 5X Ceramide Moisturizer", shade: "All Skin Types", size: "30 g", qty: 1, price: 139000 }],
-        total: 159000,
-        status: "Selesai",
-        date: "2026-08-01"
-      }
+      { id: 1, date: "19/8/2026", user: "Rara", address: "Jl. Melati No. 12", product: "G2G Airy Cushion Pink", total: 134000, payment: "COD", status: "Dikemas" }
     ];
 
     let currentUser = null;
     let selectedRole = 'customer';
-    let currentStep = 1;
-    let cart = [];
-    let selectedProduct = null;
-    let selectedShade = "";
-    let selectedSize = "";
-    let activeReportTab = 'daily';
+    let currentPayment = 'COD';
+    let activeCheckoutProduct = null;
 
-    window.onload = () => {
-      feather.replace();
-      renderProducts();
-    };
+    window.onload = () => { feather.replace(); renderProducts(); };
 
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toast-text').innerText = message;
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toast-text').innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
     }
 
     function setRole(role) {
       selectedRole = role;
       document.getElementById('btn-role-customer').classList.toggle('active', role === 'customer');
       document.getElementById('btn-role-admin').classList.toggle('active', role === 'admin');
-      
-      document.getElementById('customer-flow').style.display = role === 'customer' ? 'block' : 'none';
-      document.getElementById('admin-flow').style.display = role === 'admin' ? 'block' : 'none';
+      document.getElementById('group-username').style.display = role === 'admin' ? 'none' : 'block';
+      document.getElementById('group-address').style.display = role === 'admin' ? 'none' : 'block';
+      document.getElementById('btn-login-submit').innerText = role === 'admin' ? 'Masuk Admin' : 'Masuk Aplikasi';
     }
 
-    function nextStep(step) {
-      if (step === 2 && !document.getElementById('cust-email').checkValidity()) {
-        showToast('Masukkan email yang valid');
-        return;
-      }
-      if (step === 3 && (!document.getElementById('cust-username').value || !document.getElementById('cust-password').value)) {
-        showToast('Lengkapi Username & Password');
-        return;
-      }
-
-      currentStep = step;
-      for (let i = 1; i <= 3; i++) {
-        document.getElementById(`step-${i}`).style.display = i === step ? 'block' : 'none';
-        document.getElementById(`dot-${i}`).classList.toggle('active', i <= step);
-      }
-    }
-
-    function handleCustomerSubmit(e) {
+    function handleLogin(e) {
       e.preventDefault();
-      currentUser = {
-        role: 'customer',
-        email: document.getElementById('cust-email').value,
-        username: document.getElementById('cust-username').value,
-        phone: document.getElementById('cust-phone').value,
-        address: "Jl. Beauty Mawar No. 12, Jakarta"
-      };
-
-      document.getElementById('onboarding-overlay').style.display = 'none';
-      document.getElementById('header-role-badge').innerText = 'Pelanggan';
-      document.getElementById('customer-nav').style.display = 'flex';
-      
-      document.getElementById('profile-name').innerText = currentUser.username;
-      document.getElementById('prof-email').value = currentUser.email;
-      document.getElementById('prof-phone').value = currentUser.phone;
-
-      showToast(`Selamat datang, ${currentUser.username}!`);
-      switchView('home');
-    }
-
-    function handleAdminSubmit(e) {
-      e.preventDefault();
-      const u = document.getElementById('admin-username').value;
-      const p = document.getElementById('admin-password').value;
-
-      if (u === 'admin' && p === 'admin123') {
-        currentUser = { role: 'admin', username: 'Admin Rara' };
+      if (selectedRole === 'admin') {
+        currentUser = { role: 'admin' };
         document.getElementById('onboarding-overlay').style.display = 'none';
-        document.getElementById('header-role-badge').innerText = 'ADMIN';
         document.getElementById('customer-nav').style.display = 'none';
-        
+        switchView('admin-menu');
         showToast('Login Admin Berhasil');
-        switchView('admin');
-        switchAdminSection('input');
       } else {
-        showToast('Username/Password Admin Salah!');
+        const name = document.getElementById('input-user').value;
+        const addr = document.getElementById('input-addr').value;
+        currentUser = { role: 'customer', name, address: addr };
+        document.getElementById('onboarding-overlay').style.display = 'none';
+        document.getElementById('customer-nav').style.display = 'flex';
+        switchView('home');
+        showToast(`Selamat datang, ${name}!`);
       }
     }
 
     function switchView(viewId) {
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById(`view-${viewId}`).classList.add('active');
-
-      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-      if (viewId === 'home') document.querySelectorAll('.nav-item')[0]?.classList.add('active');
-      if (viewId === 'orders') document.querySelectorAll('.nav-item')[1]?.classList.add('active');
-      if (viewId === 'profile') document.querySelectorAll('.nav-item')[2]?.classList.add('active');
-
-      if (viewId === 'cart') renderCart();
-      if (viewId === 'orders') renderOrders();
-
-      window.scrollTo(0,0);
-    }
-
-    // ADMIN SECTIONS
-    function switchAdminSection(sec) {
-      document.getElementById('tab-btn-input').classList.toggle('active', sec === 'input');
-      document.getElementById('tab-btn-view').classList.toggle('active', sec === 'view');
-      document.getElementById('tab-btn-price').classList.toggle('active', sec === 'price');
-      document.getElementById('tab-btn-supplier').classList.toggle('active', sec === 'supplier');
-      document.getElementById('tab-btn-report').classList.toggle('active', sec === 'report');
-
-      document.getElementById('admin-sec-input').style.display = sec === 'input' ? 'block' : 'none';
-      document.getElementById('admin-sec-view').style.display = sec === 'view' ? 'block' : 'none';
-      document.getElementById('admin-sec-price').style.display = sec === 'price' ? 'block' : 'none';
-      document.getElementById('admin-sec-supplier').style.display = sec === 'supplier' ? 'block' : 'none';
-      document.getElementById('admin-sec-report').style.display = sec === 'report' ? 'block' : 'none';
-
-      if (sec === 'view') renderAdminProducts();
-      if (sec === 'price') renderAdminPrices();
-      if (sec === 'supplier') renderAdminSuppliers();
-      if (sec === 'report') renderReportContent();
-    }
-
-    function switchReportTab(type) {
-      activeReportTab = type;
-      document.getElementById('subtab-daily').classList.toggle('active', type === 'daily');
-      document.getElementById('subtab-monthly').classList.toggle('active', type === 'monthly');
-      document.getElementById('subtab-yearly').classList.toggle('active', type === 'yearly');
-      renderReportContent();
+      if (viewId === 'orders') renderCustomerOrders();
+      window.scrollTo(0, 0);
     }
 
     function renderProducts() {
-      const bestContainer = document.getElementById('best-seller-container');
-      const gridContainer = document.getElementById('product-grid-container');
+      const grid = document.getElementById('product-grid-container');
+      grid.innerHTML = products.map(p => `
+        <div class="product-card" onclick="openCheckout(${p.id})">
+          <img src="${p.image}">
+          <div class="product-title">${p.name}</div>
+          <div class="product-price">Rp${p.price.toLocaleString()}</div>
+          <div class="product-meta">⭐ ${p.rating} | Terjual ${p.sold}</div>
+          <button class="btn btn-secondary btn-sm" style="width:100%;">Beli Sekarang</button>
+        </div>`).join('');
+    }
 
-      bestContainer.innerHTML = '';
-      gridContainer.innerHTML = '';
+    function openCheckout(id) {
+      if (!currentUser || currentUser.role === 'admin') {
+        showToast('Silakan login sebagai pelanggan terlebih dahulu!');
+        return;
+      }
+      activeCheckoutProduct = products.find(p => p.id === id);
+      document.getElementById('checkout-address').innerText = `${currentUser.name} (${currentUser.address || 'Alamat Utama'})`;
+      document.getElementById('co-prod-name').innerText = activeCheckoutProduct.name;
+      document.getElementById('co-prod-price').innerText = `Rp${activeCheckoutProduct.price.toLocaleString()}`;
+      document.getElementById('co-total').innerText = `Rp${(activeCheckoutProduct.price + 5000).toLocaleString()}`;
+      switchView('checkout');
+    }
 
-      products.forEach(p => {
-        if (p.isBestSeller) {
-          bestContainer.innerHTML += `
-            <div class="product-card" style="min-width: 140px; width: 140px;" onclick="openDetail(${p.id})">
-              <img src="${p.image}" alt="${p.name}">
-              <div class="product-title">${p.name}</div>
-              <div class="product-price">Rp${p.price.toLocaleString()}</div>
-              <div class="product-meta"><i data-feather="star" style="width:12px; fill:#FFC107; color:#FFC107;"></i> ${p.rating}</div>
-            </div>
-          `;
-        }
+    function selectPayment(type) {
+      currentPayment = type;
+      document.getElementById('opt-cod').classList.toggle('selected', type === 'COD');
+      document.getElementById('opt-qris').classList.toggle('selected', type === 'QRIS');
+      document.getElementById('qris-container').style.display = type === 'QRIS' ? 'block' : 'none';
+    }
 
-        gridContainer.innerHTML += `
-          <div class="product-card">
-            <img src="${p.image}" alt="${p.name}" onclick="openDetail(${p.id})">
-            <div class="product-title" onclick="openDetail(${p.id})">${p.name}</div>
-            <div class="product-price">Rp${p.price.toLocaleString()}</div>
-            <div class="product-meta">
-              <i data-feather="star" style="width:12px; fill:#FFC107; color:#FFC107;"></i> ${p.rating} | Terjual ${p.sold}
-            </div>
-            <div class="product-actions">
-              <button class="btn btn-secondary btn-sm" style="flex:1;" onclick="quickAddToCart(${p.id})">+ Keranjang</button>
-            </div>
-          </div>
-        `;
+    function finalizeCheckout() {
+      orders.unshift({
+        id: orders.length + 1,
+        date: new Date().toLocaleDateString('id-ID'),
+        user: currentUser.name,
+        address: currentUser.address || 'Alamat Utama',
+        product: activeCheckoutProduct.name,
+        total: activeCheckoutProduct.price + 5000,
+        payment: currentPayment,
+        status: 'Dikemas'
       });
-      feather.replace();
-    }
-
-    function openDetail(id) {
-      selectedProduct = products.find(p => p.id === id);
-      selectedShade = selectedProduct.shades[0];
-      selectedSize = selectedProduct.sizes[0];
-
-      const detailContent = document.getElementById('detail-content');
-      detailContent.innerHTML = `
-        <img src="${selectedProduct.image}" class="detail-img">
-        <h2 style="font-size: 18px;">${selectedProduct.name}</h2>
-        <div style="font-size: 20px; font-weight: 700; color: var(--accent); margin: 6px 0;">
-          Rp${selectedProduct.price.toLocaleString()}
-        </div>
-        <div class="product-meta">
-          <i data-feather="star" style="width:14px; fill:#FFC107; color:#FFC107;"></i> ${selectedProduct.rating} | Terjual ${selectedProduct.sold}
-        </div>
-        <p style="font-size: 13px; color: var(--text-light); margin-top: 8px;">${selectedProduct.desc}</p>
-
-        <div class="variant-group">
-          <label>Pilih Variasi Warna/Shade:</label>
-          <div class="variant-options">
-            ${selectedProduct.shades.map((s, idx) => `
-              <button class="variant-btn ${idx === 0 ? 'selected' : ''}" onclick="selectVariant('shade', '${s}', this)">${s}</button>
-            `).join('')}
-          </div>
-        </div>
-
-        <div class="variant-group">
-          <label>Pilih Ukuran/Berat:</label>
-          <div class="variant-options">
-            ${selectedProduct.sizes.map((sz, idx) => `
-              <button class="variant-btn ${idx === 0 ? 'selected' : ''}" onclick="selectVariant('size', '${sz}', this)">${sz}</button>
-            `).join('')}
-          </div>
-        </div>
-
-        <div style="display:flex; gap:8px; margin-top:20px;">
-          <button class="btn btn-secondary" onclick="addToCartFromDetail()">+ Keranjang</button>
-          <button class="btn btn-primary" onclick="buyDirectFromDetail()">Beli Sekarang</button>
-        </div>
-      `;
-      feather.replace();
-      switchView('detail');
-    }
-
-    function selectVariant(type, value, btn) {
-      const parent = btn.parentElement;
-      parent.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-
-      if (type === 'shade') selectedShade = value;
-      if (type === 'size') selectedSize = value;
-    }
-
-    function quickAddToCart(productId) {
-      const p = products.find(prod => prod.id === productId);
-      addToCartItem(p, p.shades[0], p.sizes[0]);
-    }
-
-    function addToCartFromDetail() {
-      addToCartItem(selectedProduct, selectedShade, selectedSize);
-    }
-
-    function buyDirectFromDetail() {
-      addToCartItem(selectedProduct, selectedShade, selectedSize);
-      switchView('cart');
-    }
-
-    function addToCartItem(product, shade, size) {
-      const existing = cart.find(c => c.id === product.id && c.shade === shade && c.size === size);
-      if (existing) {
-        existing.qty += 1;
-      } else {
-        cart.push({
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          shade: shade,
-          size: size,
-          qty: 1,
-          selected: true
-        });
-      }
-      updateCartBadge();
-      showToast('Ditambahkan ke keranjang!');
-    }
-
-    function updateCartBadge() {
-      const totalItems = cart.reduce((acc, c) => acc + c.qty, 0);
-      const badge = document.getElementById('cart-badge');
-      if (totalItems > 0) {
-        badge.innerText = totalItems;
-        badge.style.display = 'block';
-      } else {
-        badge.style.display = 'none';
-      }
-    }
-
-    function renderCart() {
-      const cartList = document.getElementById('cart-list');
-      const cartSummary = document.getElementById('cart-summary');
-
-      if (cart.length === 0) {
-        cartList.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-light);">Keranjang belanja Anda kosong.</div>`;
-        cartSummary.innerHTML = '';
-        return;
-      }
-
-      cartList.innerHTML = cart.map((item, index) => `
-        <div class="cart-item">
-          <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleCartSelect(${index})">
-          <img src="${item.image}">
-          <div class="cart-info">
-            <div class="cart-title">${item.name}</div>
-            <div class="cart-variant">${item.shade} | ${item.size}</div>
-            <div style="font-weight:700; color:var(--accent);">Rp${item.price.toLocaleString()}</div>
-          </div>
-          <div class="qty-cnt">
-            <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
-            <span style="font-size:12px; font-weight:600;">${item.qty}</span>
-            <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
-          </div>
-        </div>
-      `).join('');
-
-      const subtotal = cart.filter(c => c.selected).reduce((acc, c) => acc + (c.price * c.qty), 0);
-      const shipping = subtotal > 0 ? 20000 : 0;
-      const grandTotal = subtotal + shipping;
-
-      cartSummary.innerHTML = `
-        <div class="summary-row">
-          <span>Subtotal Produk</span>
-          <span>Rp${subtotal.toLocaleString()}</span>
-        </div>
-        <div class="summary-row">
-          <span>Ongkos Kirim (Flat)</span>
-          <span>Rp${shipping.toLocaleString()}</span>
-        </div>
-        <div class="summary-row">
-          <span>Metode Pembayaran</span>
-          <strong>COD (Bayar di Tempat)</strong>
-        </div>
-        <div class="summary-row total">
-          <span>Total Pembayaran</span>
-          <span>Rp${grandTotal.toLocaleString()}</span>
-        </div>
-        <button class="btn btn-primary" style="margin-top:12px;" ${subtotal === 0 ? 'disabled' : ''} onclick="checkout()">
-          Checkout Sekarang
-        </button>
-      `;
-    }
-
-    function toggleCartSelect(index) {
-      cart[index].selected = !cart[index].selected;
-      renderCart();
-    }
-
-    function changeQty(index, delta) {
-      cart[index].qty += delta;
-      if (cart[index].qty <= 0) {
-        cart.splice(index, 1);
-      }
-      updateCartBadge();
-      renderCart();
-    }
-
-    function checkout() {
-      const selectedItems = cart.filter(c => c.selected);
-      if (selectedItems.length === 0) {
-        showToast('Pilih minimal satu produk untuk checkout!');
-        return;
-      }
-
-      const orderId = '#RRC-' + Math.floor(100000 + Math.random() * 900000);
-      const subtotal = selectedItems.reduce((acc, c) => acc + (c.price * c.qty), 0);
-      const grandTotal = subtotal + 20000;
-      const todayISO = new Date().toISOString().split('T')[0];
-
-      const newOrder = {
-        id: orderId,
-        items: [...selectedItems],
-        total: grandTotal,
-        status: 'Dikemas',
-        date: todayISO
-      };
-
-      orders.unshift(newOrder);
-      cart = cart.filter(c => !c.selected);
-      updateCartBadge();
-
-      document.getElementById('prof-order-count').innerText = orders.length;
-
       showToast('Pesanan berhasil dibuat!');
       switchView('orders');
     }
 
-    function renderOrders() {
-      const container = document.getElementById('orders-list');
-      if (orders.length === 0) {
-        container.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-light);">Belum ada riwayat pesanan.</div>`;
+    function renderCustomerOrders() {
+      const list = document.getElementById('customer-orders-list');
+      const userOrders = orders.filter(o => o.user === currentUser.name);
+      if (userOrders.length === 0) {
+        list.innerHTML = `<p style="font-size:12px; color:var(--text-light); text-align:center;">Belum ada pesanan.</p>`;
         return;
       }
-
-      container.innerHTML = orders.map(ord => `
-        <div class="summary-card" style="margin-bottom:12px;">
-          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:8px;">
-            <strong>${ord.id}</strong>
-            <span style="color:var(--accent); font-weight:600;">${ord.status}</span>
+      list.innerHTML = userOrders.map(o => `
+        <div class="summary-card" style="margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700;">
+            <span>${o.product}</span>
+            <span style="color:var(--accent);">${o.status}</span>
           </div>
-
-          <div class="timeline">
-            <div class="timeline-step ${ord.status === 'Dikemas' || ord.status === 'Dikirim' || ord.status === 'Selesai' ? 'active' : ''}">
-              <div class="timeline-icon"><i data-feather="box" style="width:12px;"></i></div>
-              Dikemas
-            </div>
-            <div class="timeline-step ${ord.status === 'Dikirim' || ord.status === 'Selesai' ? 'active' : ''}">
-              <div class="timeline-icon"><i data-feather="truck" style="width:12px;"></i></div>
-              Dikirim
-            </div>
-            <div class="timeline-step ${ord.status === 'Selesai' ? 'active' : ''}">
-              <div class="timeline-icon"><i data-feather="check" style="width:12px;"></i></div>
-              Selesai
-            </div>
-          </div>
-
-          <div style="border-top:1px solid #eee; padding-top:8px;">
-            ${ord.items.map(i => `
-              <div style="font-size:12px; display:flex; justify-content:space-between; margin-bottom:4px;">
-                <span>${i.name} (${i.shade}, ${i.size}) x${i.qty}</span>
-                <span>Rp${(i.price * i.qty).toLocaleString()}</span>
-              </div>
-            `).join('')}
-          </div>
-
-          <div style="font-size:13px; font-weight:700; text-align:right; margin-top:8px; color:var(--accent);">
-            Total: Rp${ord.total.toLocaleString()}
-          </div>
-        </div>
-      `).join('');
-      feather.replace();
+          <div style="font-size:11px; color:var(--text-light); margin:4px 0;">Total: Rp${o.total.toLocaleString()} (${o.payment})</div>
+          <div style="font-size:10px; color:var(--text-light);">Tanggal: ${o.date}</div>
+        </div>`).join('');
     }
 
-    // ADMIN: INPUT & EDIT BARANG
-    function handleSaveProduct(e) {
+    function switchAdminTab(tab) {
+      switchView('admin-sub');
+      const box = document.getElementById('admin-sub-content');
+      if (tab === 'input') {
+        box.innerHTML = `
+          <h4>Dashboard & Input Barang Baru</h4>
+          <form onsubmit="handleInputProduct(event)" style="margin-top:10px;">
+            <div class="form-group"><label>Nama Barang</label><input type="text" id="adm-name" class="form-control" required></div>
+            <div class="form-group"><label>Harga (Rp)</label><input type="number" id="adm-price" class="form-control" required></div>
+            <div class="form-group"><label>URL Gambar</label><input type="url" id="adm-img" class="form-control" required></div>
+            <button type="submit" class="btn btn-primary">Simpan Barang</button>
+          </form>`;
+      } else if (tab === 'orders') {
+        box.innerHTML = `
+          <h4>Riwayat Pembelian & Kontrol Status Pengiriman</h4>
+          <table>
+            <tr><th>Tanggal</th><th>Pembeli</th><th>Produk</th><th>Total</th><th>Status</th><th>Aksi</th></tr>
+            ${orders.map((o, idx) => `
+              <tr>
+                <td>${o.date}</td>
+                <td>${o.user}<br><span style="font-size:9px;color:gray;">${o.address}</span></td>
+                <td>${o.product}</td>
+                <td>Rp${o.total.toLocaleString()}<br>(${o.payment})</td>
+                <td style="font-weight:700; color:var(--accent);">${o.status}</td>
+                <td>
+                  <select class="form-control" style="padding:4px; font-size:10px;" onchange="updateStatus(${idx}, this.value)">
+                    <option ${o.status==='Dikemas'?'selected':''}>Dikemas</option>
+                    <option ${o.status==='Dikirim'?'selected':''}>Dikirim</option>
+                    <option ${o.status==='Selesai'?'selected':''}>Selesai</option>
+                  </select>
+                </td>
+              </tr>`).join('')}
+          </table>`;
+      } else if (tab === 'supplier') {
+        box.innerHTML = `<h4>Edit / Input Supplier</h4><p style="font-size:12px; color:var(--text-light); margin-top:6px;">Fitur data supplier aktif.</p>`;
+      } else if (tab === 'view') {
+        box.innerHTML = `<h4>View & Ubah Harga Barang</h4><p style="font-size:12px; color:var(--text-light); margin-top:6px;">Total produk terdaftar: ${products.length}</p>`;
+      } else if (tab === 'report') {
+        const rev = orders.reduce((a,b)=>a+b.total,0);
+        box.innerHTML = `<h4>Laporan Penjualan</h4><p style="font-size:14px; font-weight:700; color:var(--accent); margin-top:6px;">Total Pendapatan: Rp${rev.toLocaleString()}</p>`;
+      }
+    }
+
+    function handleInputProduct(e) {
       e.preventDefault();
-      const idInput = document.getElementById('adm-p-id').value;
-      const name = document.getElementById('adm-p-name').value;
-      const price = parseInt(document.getElementById('adm-p-price').value);
-      const image = document.getElementById('adm-p-img').value;
-      const shades = document.getElementById('adm-p-shades').value.split(',').map(s => s.trim());
-      const sizes = document.getElementById('adm-p-sizes').value.split(',').map(s => s.trim());
-
-      if (idInput) {
-        // Edit Mode
-        const p = products.find(prod => prod.id == idInput);
-        if (p) {
-          p.name = name;
-          p.price = price;
-          p.image = image;
-          p.shades = shades;
-          p.sizes = sizes;
-          showToast('Barang berhasil diperbarui!');
-        }
-      } else {
-        // Input Mode Baru
-        const newProd = {
-          id: Date.now(),
-          name: name,
-          price: price,
-          rating: 5.0,
-          sold: 0,
-          image: image,
-          desc: "Produk kosmetik original pilihan Rara Cosmetics.",
-          shades: shades,
-          sizes: sizes,
-          isBestSeller: false
-        };
-        products.unshift(newProd);
-        showToast('Barang berhasil dimasukkan ke katalog!');
-      }
-
-      resetProductForm();
+      products.push({
+        id: products.length + 1,
+        name: document.getElementById('adm-name').value,
+        price: parseInt(document.getElementById('adm-price').value),
+        rating: 5.0, sold: 0,
+        image: document.getElementById('adm-img').value
+      });
+      showToast('Produk berhasil ditambahkan!');
       renderProducts();
-      switchAdminSection('view');
+      switchView('admin-menu');
     }
 
-    function editProduct(id) {
-      const p = products.find(prod => prod.id === id);
-      if (!p) return;
-
-      document.getElementById('adm-p-id').value = p.id;
-      document.getElementById('adm-p-name').value = p.name;
-      document.getElementById('adm-p-price').value = p.price;
-      document.getElementById('adm-p-img').value = p.image;
-      document.getElementById('adm-p-shades').value = p.shades.join(', ');
-      document.getElementById('adm-p-sizes').value = p.sizes.join(', ');
-
-      document.getElementById('form-title-text').innerText = 'Form Edit Barang';
-      document.getElementById('btn-save-product').innerText = 'Update Perubahan';
-      document.getElementById('btn-cancel-edit').style.display = 'inline-flex';
-
-      switchAdminSection('input');
+    function updateStatus(idx, val) {
+      orders[idx].status = val;
+      showToast('Status pesanan diperbarui!');
+      switchAdminTab('orders');
     }
 
-    function resetProductForm() {
-      document.getElementById('adm-p-id').value = '';
-      document.getElementById('form-title-text').innerText = 'Form Input Barang Baru';
-      document.getElementById('btn-save-product').innerText = 'Simpan Ke Katalog';
-      document.getElementById('btn-cancel-edit').style.display = 'none';
-      document.querySelector('#admin-sec-input form').reset();
-    }
-
-    function renderAdminProducts() {
-      const container = document.getElementById('admin-product-list');
-      container.innerHTML = products.map(p => `
-        <div style="display:flex; gap:10px; border-bottom:1px solid #eee; padding:8px 0; align-items:center;">
-          <img src="${p.image}" style="width:40px; height:40px; border-radius:6px; object-fit:cover;">
-          <div style="flex:1;">
-            <div style="font-size:12px; font-weight:600;">${p.name}</div>
-            <div style="font-size:11px; color:var(--accent);">Rp${p.price.toLocaleString()}</div>
-          </div>
-          <button class="btn btn-secondary btn-sm" style="width:auto; padding:4px 8px;" onclick="editProduct(${p.id})">Edit</button>
-          <button class="btn btn-secondary btn-sm" style="color:red; width:auto; padding:4px 8px;" onclick="deleteProduct(${p.id})">Hapus</button>
-        </div>
-      `).join('');
-    }
-
-    function deleteProduct(id) {
-      products = products.filter(p => p.id !== id);
-      renderProducts();
-      renderAdminProducts();
-      renderAdminPrices();
-      showToast('Barang berhasil dihapus!');
-    }
-
-    // VIEW HARGA BARANG
-    function renderAdminPrices() {
-      const container = document.getElementById('admin-price-list');
-      container.innerHTML = `
-        <div style="font-size:11px; color:var(--text-light); margin-bottom:8px;">Daftar update harga seluruh produk aktif:</div>
-        ${products.map(p => `
-          <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:8px 0; font-size:12px;">
-            <span>${p.name}</span>
-            <strong style="color:var(--accent);">Rp${p.price.toLocaleString()}</strong>
-          </div>
-        `).join('')}
-      `;
-    }
-
-    // SUPPLIER
-    function renderAdminSuppliers() {
-      const container = document.getElementById('admin-supplier-list');
-      container.innerHTML = `
-        <div style="font-size:11px; color:var(--text-light); margin-bottom:8px;">Daftar mitra supplier Rara Cosmetics:</div>
-        ${suppliers.map(s => `
-          <div style="background:var(--bg); padding:10px; border-radius:10px; margin-bottom:8px; font-size:12px;">
-            <strong>${s.name} (${s.id})</strong>
-            <div style="color:var(--text-light); margin-top:2px;">Kontak: ${s.contact}</div>
-            <div style="color:var(--text-light);">Alamat: ${s.address}</div>
-          </div>
-        `).join('')}
-      `;
-    }
-
-    // LIHAT PEMBELIAN (LAPORAN)
-    function renderReportContent() {
-      const container = document.getElementById('report-content');
-      const today = new Date().toISOString().split('T')[0];
-      const currentMonth = today.substring(0, 7);
-      const currentYear = today.substring(0, 4);
-
-      let filteredOrders = [];
-      let labelText = "";
-
-      if (activeReportTab === 'daily') {
-        labelText = "Pembelian Harian (Hari Ini)";
-        filteredOrders = orders.filter(o => o.date === today);
-      } else if (activeReportTab === 'monthly') {
-        labelText = "Pembelian Bulanan (Bulan Ini)";
-        filteredOrders = orders.filter(o => o.date.startsWith(currentMonth));
-      } else if (activeReportTab === 'yearly') {
-        labelText = "Pembelian Tahunan (Tahun Ini)";
-        filteredOrders = orders.filter(o => o.date.startsWith(currentYear));
-      }
-
-      const totalRevenue = filteredOrders.reduce((acc, o) => acc + o.total, 0);
-
-      container.innerHTML = `
-        <div style="background:var(--bg); padding:12px; border-radius:12px; margin-bottom:12px;">
-          <div style="font-size:11px; color:var(--text-light);">${labelText}</div>
-          <div style="font-size:18px; font-weight:700; color:var(--accent);">Rp${totalRevenue.toLocaleString()}</div>
-          <div style="font-size:11px; color:var(--text); margin-top:2px;">Total ${filteredOrders.length} Transaksi</div>
-        </div>
-
-        <div style="font-size:12px; font-weight:600; margin-bottom:6px;">Rincian Pembelian Pelanggan:</div>
-        ${filteredOrders.length === 0 ? `<div style="font-size:11px; color:var(--text-light); text-align:center; padding:10px;">Tidak ada data pembelian pada periode ini.</div>` : 
-          filteredOrders.map(o => `
-            <div style="border-bottom:1px solid #eee; padding:8px 0; font-size:11px;">
-              <div style="display:flex; justify-content:space-between;">
-                <strong>${o.id}</strong>
-                <span>${o.date}</span>
-              </div>
-              <div style="color:var(--accent); font-weight:600; margin-top:2px;">Total: Rp${o.total.toLocaleString()}</div>
-            </div>
-          `).join('')
-        }
-      `;
-    }
-
-    function openModal(id) {
-      document.getElementById(id).classList.add('active');
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('active');
-    }
-
-    function performLogout() {
-      closeModal('logout-modal');
+    function openLogoutModal() {
       currentUser = null;
-      cart = [];
-      updateCartBadge();
-      
-      document.getElementById('form-customer').reset();
-      nextStep(1);
-
       document.getElementById('onboarding-overlay').style.display = 'flex';
       switchView('home');
       showToast('Berhasil logout');
