@@ -801,4 +801,993 @@
     </div>
   </div>
 
-  <!-- VIEW 4: ORDERS (STATUS P
+  <!-- VIEW 4: ORDERS (STATUS PESANAN) -->
+  <div id="view-orders" class="view">
+    <h3 style="margin-bottom: 12px;">Status Pesanan Anda</h3>
+    <div id="orders-list">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- VIEW 5: PROFILE (CUSTOMER) -->
+  <div id="view-profile" class="view">
+    <div class="profile-card">
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="avatar" alt="Profile">
+      <h3 id="profile-name">Nama User</h3>
+      <span class="role-badge" style="display:inline-block; margin-top:4px;">Beauty Member</span>
+      
+      <div style="display: flex; justify-content: space-around; margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px;">
+        <div>
+          <div style="font-weight: 700; color: var(--accent);" id="prof-order-count">0</div>
+          <div style="font-size: 11px; color: var(--text-light);">Pesanan</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card" style="margin-top: 0;">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="text" id="prof-email" class="form-control" readonly>
+      </div>
+      <div class="form-group">
+        <label>Nomor Telepon</label>
+        <input type="text" id="prof-phone" class="form-control" readonly>
+      </div>
+      <div class="form-group">
+        <label>Alamat Pengiriman</label>
+        <textarea id="prof-address" class="form-control" rows="2">Jl. Beauty Mawar No. 12, Jakarta</textarea>
+      </div>
+      <button class="btn btn-outline btn-sm" style="margin-bottom: 8px;" onclick="showToast('Alamat berhasil diperbarui!')">Simpan Profil</button>
+      <button class="btn btn-secondary btn-sm" style="color: red;" onclick="openModal('logout-modal')">Logout</button>
+    </div>
+  </div>
+
+  <!-- VIEW 6: ADMIN DASHBOARD (PILIHAN MENU LENGKAP SEPERTI CONTOH) -->
+  <div id="view-admin" class="view">
+    <h3 style="margin-bottom: 14px;">Dashboard Admin</h3>
+
+    <!-- ADMIN MENU SELEKSI TABS (SESUAI CONTOH GAMBAR) -->
+    <div class="admin-menu-grid" style="grid-template-columns: repeat(2, 1fr);">
+      <button class="admin-tab-btn active" id="tab-btn-input" onclick="switchAdminSection('input')">
+        <i data-feather="plus-circle"></i>
+        <span>Dashboard & Input Barang</span>
+      </button>
+      <button class="admin-tab-btn" id="tab-btn-supplier" onclick="switchAdminSection('supplier')">
+        <i data-feather="truck"></i>
+        <span>Edit / Input Supplier</span>
+      </button>
+      <button class="admin-tab-btn" id="tab-btn-price" onclick="switchAdminSection('price')">
+        <i data-feather="tag"></i>
+        <span>View & Ubah Harga Barang</span>
+      </button>
+      <button class="admin-tab-btn" id="tab-btn-purchases" onclick="switchAdminSection('purchases')">
+        <i data-feather="shopping-cart"></i>
+        <span>Lihat Pembelian</span>
+      </button>
+      <button class="admin-tab-btn" id="tab-btn-report" onclick="switchAdminSection('report')" style="grid-column: span 2;">
+        <i data-feather="file-text"></i>
+        <span>Laporan Penjualan</span>
+      </button>
+    </div>
+
+    <!-- SECTION 1: INPUT BARANG -->
+    <div id="admin-sec-input" class="summary-card" style="margin-top: 0;">
+      <h4 style="margin-bottom: 12px;">Form Input Barang Baru</h4>
+      <form onsubmit="handleAddProduct(event)">
+        <div class="form-group">
+          <label>Nama Barang</label>
+          <input type="text" id="adm-p-name" class="form-control" placeholder="Contoh: Cushion Glow" required>
+        </div>
+        <div class="form-group">
+          <label>Harga (Rp)</label>
+          <input type="number" id="adm-p-price" class="form-control" placeholder="120000" required>
+        </div>
+        <div class="form-group">
+          <label>URL Gambar Barang</label>
+          <input type="url" id="adm-p-img" class="form-control" placeholder="https://..." required>
+        </div>
+        <div class="form-group">
+          <label>Variasi Warna (Pisahkan koma)</label>
+          <input type="text" id="adm-p-shades" class="form-control" placeholder="Vanilla, Honey, Sand" required>
+        </div>
+        <div class="form-group">
+          <label>Variasi Ukuran (Pisahkan koma)</label>
+          <input type="text" id="adm-p-sizes" class="form-control" placeholder="15 g, 30 g" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">+ Simpan Ke Katalog</button>
+      </form>
+    </div>
+
+    <!-- SECTION 2: EDIT / INPUT SUPPLIER -->
+    <div id="admin-sec-supplier" class="summary-card" style="margin-top: 0; display: none;">
+      <h4 style="margin-bottom: 12px;">Manajemen Supplier</h4>
+      <form onsubmit="handleAddSupplier(event)" style="margin-bottom: 16px;">
+        <div class="form-group">
+          <label>Nama Supplier</label>
+          <input type="text" id="supp-name" class="form-control" placeholder="PT. Beauty Indonesia" required>
+        </div>
+        <div class="form-group">
+          <label>Kontak / Telepon</label>
+          <input type="text" id="supp-contact" class="form-control" placeholder="081299990000" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">+ Tambah Supplier</button>
+      </form>
+
+      <h5>Daftar Supplier:</h5>
+      <div id="supplier-list-container" style="margin-top: 8px;">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- SECTION 3: VIEW & UBAH HARGA BARANG -->
+    <div id="admin-sec-price" class="summary-card" style="margin-top: 0; display: none;">
+      <h4 style="margin-bottom: 12px;">View & Ubah Harga Barang</h4>
+      <div id="admin-price-list">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+
+    <!-- SECTION 4: LIHAT PEMBELIAN & KONTROL STATUS PENGIRIMAN (SESUAI GAMBAR REFERENSI 4 & 5) -->
+    <div id="admin-sec-purchases" class="summary-card" style="margin-top: 0; display: none;">
+      <h4 style="margin-bottom: 12px;"><i data-feather="shopping-cart"></i> Riwayat Pembelian & Kontrol Status Pengiriman</h4>
+      <div style="overflow-x: auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Info Pembeli</th>
+              <th>Produk Dibeli</th>
+              <th>Total Tagihan</th>
+              <th>Status Saat Ini</th>
+              <th>Aksi Ubah Status</th>
+            </tr>
+          </thead>
+          <tbody id="purchases-table-body">
+            <!-- Injected by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 5: LAPORAN (HARIAN, BULANAN, TAHUNAN) -->
+    <div id="admin-sec-report" class="summary-card" style="margin-top: 0; display: none;">
+      <h4 style="margin-bottom: 10px;">Laporan Penjualan</h4>
+      
+      <!-- REPORT SUB-TABS -->
+      <div class="report-subtabs">
+        <button class="subtab-btn active" id="subtab-daily" onclick="switchReportTab('daily')">Harian</button>
+        <button class="subtab-btn" id="subtab-monthly" onclick="switchReportTab('monthly')">Bulanan</button>
+        <button class="subtab-btn" id="subtab-yearly" onclick="switchReportTab('yearly')">Tahunan</button>
+      </div>
+
+      <!-- REPORT CONTENT DISPLAY -->
+      <div id="report-content">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <button class="btn btn-secondary btn-sm" style="margin-top: 16px; color: red;" onclick="openModal('logout-modal')">Logout Admin</button>
+  </div>
+
+  <!-- BOTTOM NAVIGATION BAR -->
+  <nav class="bottom-nav" id="customer-nav">
+    <button class="nav-item active" onclick="switchView('home')">
+      <i data-feather="home"></i>
+      <span>Beranda</span>
+    </button>
+    <button class="nav-item" onclick="switchView('orders')">
+      <i data-feather="shopping-bag"></i>
+      <span>Pesanan</span>
+    </button>
+    <button class="nav-item" onclick="switchView('profile')">
+      <i data-feather="user"></i>
+      <span>Profil</span>
+    </button>
+  </nav>
+
+  <!-- LOGOUT MODAL -->
+  <div class="modal" id="logout-modal">
+    <div class="modal-content">
+      <h4 style="margin-bottom: 8px;">Konfirmasi Logout</h4>
+      <p style="font-size: 13px; color: var(--text-light); margin-bottom: 16px;">Apakah Anda yakin ingin keluar? Seluruh data sesi saat ini akan direset.</p>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('logout-modal')">Batal</button>
+        <button class="btn btn-primary btn-sm" onclick="performLogout()">Ya, Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    // DATA INITIALIZATION (10 Kosmetik Lengkap Sesuai Permintaan)
+    let products = [
+      {
+        id: 1,
+        name: "G2G Airy Cushion Pink",
+        price: 129000,
+        rating: 4.9,
+        sold: 1420,
+        image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500",
+        desc: "Airy Cushion Pink memberikan efek mencerahkan dan menyempurnakan tekstur kulit secara alami.",
+        shades: ["01 Light Ivory", "02 Natural Beige"],
+        sizes: ["15 g"],
+        isBestSeller: true
+      },
+      {
+        id: 2,
+        name: "Hanasui Serum Cushion",
+        price: 76000,
+        rating: 4.8,
+        sold: 2300,
+        image: "https://images.unsplash.com/photo-1590156546946-ce55a12a6a5d?w=500",
+        desc: "Cushion dengan kandungan Serum yang menutrisi kulit sekaligus memberikan coverage sempurna.",
+        shades: ["01 Light", "02 Medium", "03 Porcelain"],
+        sizes: ["15 g"],
+        isBestSeller: true
+      },
+      {
+        id: 3,
+        name: "Implora Urban Lip Cream",
+        price: 24000,
+        rating: 4.7,
+        sold: 5100,
+        image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500",
+        desc: "Lip cream lembut dengan pigmentasi tinggi, tahan lama dan aman dipakai sehari-hari.",
+        shades: ["01 Dusky Nude", "02 Terracotta", "03 Dark Berry"],
+        sizes: ["2.75 g"],
+        isBestSeller: true
+      },
+      {
+        id: 4,
+        name: "Wardah Colorfit Velvet Lip Mousse",
+        price: 69000,
+        rating: 4.8,
+        sold: 1850,
+        image: "https://images.unsplash.com/photo-1631214524020-7e18db9a8f92?w=500",
+        desc: "Tekstur mousse halus dengan finishing velvet matte yang nyaman di bibir.",
+        shades: ["01 Brown Creator", "02 Joyful Orange", "03 Rose Ballerina"],
+        sizes: ["4 g"],
+        isBestSeller: false
+      },
+      {
+        id: 5,
+        name: "Emina Cheeklit Blush",
+        price: 35000,
+        rating: 4.9,
+        sold: 3200,
+        image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=500",
+        desc: "Perona pipi cair dan padat yang dapat memberikan rona alami pada pipi.",
+        shades: ["Pink", "Peach"],
+        sizes: ["10 ml"],
+        isBestSeller: true
+      },
+      {
+        id: 6,
+        name: "Wardah Colorfit Powder Foundation",
+        price: 72000,
+        rating: 4.8,
+        sold: 990,
+        image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500",
+        desc: "Kombinasi powder dan foundation dengan teknologi Microfine Matte Powder.",
+        shades: ["11C Pink Fair", "22N Light Ivory", "32N Neutral Beige"],
+        sizes: ["10 g"],
+        isBestSeller: false
+      },
+      {
+        id: 7,
+        name: "Skintific 5X Ceramide Moisturizer",
+        price: 135000,
+        rating: 4.9,
+        sold: 4500,
+        image: "https://images.unsplash.com/photo-1608248597260-2fe84f23b7e4?w=500",
+        desc: "Pelembab dengan 5 jenis Ceramide untuk memperbaiki skin barrier secara maksimal.",
+        shades: ["All Skin Types"],
+        sizes: ["30 g", "80 g"],
+        isBestSeller: true
+      },
+      {
+        id: 8,
+        name: "Hada Labo Gokujyun Face Wash",
+        price: 42000,
+        rating: 4.8,
+        sold: 2100,
+        image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=500",
+        desc: "Sabun pembersih wajah dengan Hyaluronic Acid tanpa membuat kulit terasa kering.",
+        shades: ["Gentle Wash"],
+        sizes: ["50 g", "100 g"],
+        isBestSeller: false
+      },
+      {
+        id: 9,
+        name: "Azarine Hydrasoothe Sunscreen Gel",
+        price: 65000,
+        rating: 4.9,
+        sold: 6200,
+        image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500",
+        desc: "Tabir surya berbentuk gel dingin yang sangat ringan dan cepat meresap di kulit.",
+        shades: ["SPF45 PA++++"],
+        sizes: ["50 ml"],
+        isBestSeller: true
+      },
+      {
+        id: 10,
+        name: "Pinkflash Eyeshadow Palette",
+        price: 48000,
+        rating: 4.7,
+        sold: 1300,
+        image: "https://images.unsplash.com/photo-1631214500115-598fc2cb8d2d?w=500",
+        desc: "Eyeshadow palette multi-warna dengan formula terpigmentasi tinggi dan tahan lama.",
+        shades: ["01 Strawberry Ice", "02 Caramel Coffee"],
+        sizes: ["12 g"],
+        isBestSeller: false
+      }
+    ];
+
+    // INITIAL SUPPLIERS DATA
+    let suppliers = [
+      { id: 1, name: "PT. Paragon Technology (Wardah/Emina)", contact: "0812-3456-7890" },
+      { id: 2, name: "PT. Skintific Beauty Indo", contact: "0811-2233-4455" },
+      { id: 3, name: "Distributor Azarine Official", contact: "0857-1122-3344" }
+    ];
+
+    // DUMMY INITIAL TRANSACTIONS FOR ADMIN REPORTS & PURCHASES
+    let orders = [
+      {
+        id: "#RRC-849201",
+        customerName: "jjj",
+        customerPhone: "64664",
+        customerAddress: "hajs",
+        items: [{ name: "G2G Airy Cushion Pink", shade: "01 Light Ivory", size: "15 g", qty: 1, price: 129000 }],
+        paymentMethod: "COD",
+        total: 134000,
+        status: "Dikemas",
+        date: "19/8/2026"
+      },
+      {
+        id: "#RRC-302194",
+        customerName: "Siti Rahma",
+        customerPhone: "081233445566",
+        customerAddress: "Jl. Melati No. 5",
+        items: [{ name: "Azarine Hydrasoothe Sunscreen Gel", shade: "SPF45 PA++++", size: "50 ml", qty: 2, price: 65000 }],
+        paymentMethod: "QRIS",
+        total: 135000,
+        status: "Dikirim",
+        date: "19/8/2026"
+      }
+    ];
+
+    // STATE MANAGEMENT
+    let currentUser = null;
+    let selectedRole = 'customer';
+    let currentStep = 1;
+    let cart = [];
+    let selectedProduct = null;
+    let selectedShade = "";
+    let selectedSize = "";
+    let selectedPaymentMethod = "COD";
+    let activeReportTab = 'daily';
+
+    // INITIALIZATION
+    window.onload = () => {
+      feather.replace();
+      renderProducts();
+    };
+
+    // TOAST NOTIFICATION
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // ONBOARDING & ROLE SWITCHING
+    function setRole(role) {
+      selectedRole = role;
+      document.getElementById('btn-role-customer').classList.toggle('active', role === 'customer');
+      document.getElementById('btn-role-admin').classList.toggle('active', role === 'admin');
+      
+      document.getElementById('customer-flow').style.display = role === 'customer' ? 'block' : 'none';
+      document.getElementById('admin-flow').style.display = role === 'admin' ? 'block' : 'none';
+    }
+
+    function nextStep(step) {
+      if (step === 2 && !document.getElementById('cust-email').checkValidity()) {
+        showToast('Masukkan email yang valid');
+        return;
+      }
+      if (step === 3 && (!document.getElementById('cust-username').value || !document.getElementById('cust-password').value)) {
+        showToast('Lengkapi Username & Password');
+        return;
+      }
+
+      currentStep = step;
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`step-${i}`).style.display = i === step ? 'block' : 'none';
+        document.getElementById(`dot-${i}`).classList.toggle('active', i <= step);
+      }
+    }
+
+    function handleCustomerSubmit(e) {
+      e.preventDefault();
+      currentUser = {
+        role: 'customer',
+        email: document.getElementById('cust-email').value,
+        username: document.getElementById('cust-username').value,
+        phone: document.getElementById('cust-phone').value,
+        address: "Jl. Beauty Mawar No. 12, Jakarta"
+      };
+
+      document.getElementById('onboarding-overlay').style.display = 'none';
+      document.getElementById('header-role-badge').innerText = 'Pelanggan';
+      document.getElementById('customer-nav').style.display = 'flex';
+      
+      document.getElementById('profile-name').innerText = currentUser.username;
+      document.getElementById('prof-email').value = currentUser.email;
+      document.getElementById('prof-phone').value = currentUser.phone;
+
+      showToast(`Selamat datang, ${currentUser.username}!`);
+      switchView('home');
+    }
+
+    function handleAdminSubmit(e) {
+      e.preventDefault();
+      const u = document.getElementById('admin-username').value;
+      const p = document.getElementById('admin-password').value;
+
+      if (u === 'admin' && p === 'admin123') {
+        currentUser = { role: 'admin', username: 'Admin Rara' };
+        document.getElementById('onboarding-overlay').style.display = 'none';
+        document.getElementById('header-role-badge').innerText = 'ADMIN';
+        document.getElementById('customer-nav').style.display = 'none';
+        
+        showToast('Login Admin Berhasil');
+        switchView('admin');
+        switchAdminSection('input');
+      } else {
+        showToast('Username/Password Admin Salah!');
+      }
+    }
+
+    // VIEW ROUTING
+    function switchView(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(`view-${viewId}`).classList.add('active');
+
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+      if (viewId === 'home') document.querySelectorAll('.nav-item')[0]?.classList.add('active');
+      if (viewId === 'orders') document.querySelectorAll('.nav-item')[1]?.classList.add('active');
+      if (viewId === 'profile') document.querySelectorAll('.nav-item')[2]?.classList.add('active');
+
+      if (viewId === 'cart') renderCart();
+      if (viewId === 'orders') renderOrders();
+
+      window.scrollTo(0,0);
+    }
+
+    // ADMIN NAVIGATION & SECTIONS
+    function switchAdminSection(sec) {
+      document.getElementById('tab-btn-input').classList.toggle('active', sec === 'input');
+      document.getElementById('tab-btn-supplier').classList.toggle('active', sec === 'supplier');
+      document.getElementById('tab-btn-price').classList.toggle('active', sec === 'price');
+      document.getElementById('tab-btn-purchases').classList.toggle('active', sec === 'purchases');
+      document.getElementById('tab-btn-report').classList.toggle('active', sec === 'report');
+
+      document.getElementById('admin-sec-input').style.display = sec === 'input' ? 'block' : 'none';
+      document.getElementById('admin-sec-supplier').style.display = sec === 'supplier' ? 'block' : 'none';
+      document.getElementById('admin-sec-price').style.display = sec === 'price' ? 'block' : 'none';
+      document.getElementById('admin-sec-purchases').style.display = sec === 'purchases' ? 'block' : 'none';
+      document.getElementById('admin-sec-report').style.display = sec === 'report' ? 'block' : 'none';
+
+      if (sec === 'supplier') renderSuppliers();
+      if (sec === 'price') renderPriceAdmin();
+      if (sec === 'purchases') renderPurchasesAdmin();
+      if (sec === 'report') renderReportContent();
+    }
+
+    function switchReportTab(type) {
+      activeReportTab = type;
+      document.getElementById('subtab-daily').classList.toggle('active', type === 'daily');
+      document.getElementById('subtab-monthly').classList.toggle('active', type === 'monthly');
+      document.getElementById('subtab-yearly').classList.toggle('active', type === 'yearly');
+      renderReportContent();
+    }
+
+    // RENDER PRODUCTS
+    function renderProducts() {
+      const bestContainer = document.getElementById('best-seller-container');
+      const gridContainer = document.getElementById('product-grid-container');
+
+      bestContainer.innerHTML = '';
+      gridContainer.innerHTML = '';
+
+      products.forEach(p => {
+        if (p.isBestSeller) {
+          bestContainer.innerHTML += `
+            <div class="product-card" style="min-width: 140px; width: 140px;" onclick="openDetail(${p.id})">
+              <img src="${p.image}" alt="${p.name}">
+              <div class="product-title">${p.name}</div>
+              <div class="product-price">Rp${p.price.toLocaleString()}</div>
+              <div class="product-meta"><i data-feather="star" style="width:12px; fill:#FFC107; color:#FFC107;"></i> ${p.rating}</div>
+            </div>
+          `;
+        }
+
+        gridContainer.innerHTML += `
+          <div class="product-card">
+            <img src="${p.image}" alt="${p.name}" onclick="openDetail(${p.id})">
+            <div class="product-title" onclick="openDetail(${p.id})">${p.name}</div>
+            <div class="product-price">Rp${p.price.toLocaleString()}</div>
+            <div class="product-meta">
+              <i data-feather="star" style="width:12px; fill:#FFC107; color:#FFC107;"></i> ${p.rating} | Terjual ${p.sold}
+            </div>
+            <div class="product-actions">
+              <button class="btn btn-secondary btn-sm" style="flex:1;" onclick="quickAddToCart(${p.id})">+ Keranjang</button>
+            </div>
+          </div>
+        `;
+      });
+      feather.replace();
+    }
+
+    // PRODUCT DETAIL
+    function openDetail(id) {
+      selectedProduct = products.find(p => p.id === id);
+      selectedShade = selectedProduct.shades[0];
+      selectedSize = selectedProduct.sizes[0];
+
+      const detailContent = document.getElementById('detail-content');
+      detailContent.innerHTML = `
+        <img src="${selectedProduct.image}" class="detail-img">
+        <h2 style="font-size: 18px;">${selectedProduct.name}</h2>
+        <div style="font-size: 20px; font-weight: 700; color: var(--accent); margin: 6px 0;">
+          Rp${selectedProduct.price.toLocaleString()}
+        </div>
+        <div class="product-meta">
+          <i data-feather="star" style="width:14px; fill:#FFC107; color:#FFC107;"></i> ${selectedProduct.rating} | Terjual ${selectedProduct.sold}
+        </div>
+        <p style="font-size: 13px; color: var(--text-light); margin-top: 8px;">${selectedProduct.desc}</p>
+
+        <div class="variant-group">
+          <label>Pilih Variasi Warna/Shade:</label>
+          <div class="variant-options">
+            ${selectedProduct.shades.map((s, idx) => `
+              <button class="variant-btn ${idx === 0 ? 'selected' : ''}" onclick="selectVariant('shade', '${s}', this)">${s}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="variant-group">
+          <label>Pilih Ukuran/Berat:</label>
+          <div class="variant-options">
+            ${selectedProduct.sizes.map((sz, idx) => `
+              <button class="variant-btn ${idx === 0 ? 'selected' : ''}" onclick="selectVariant('size', '${sz}', this)">${sz}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:20px;">
+          <button class="btn btn-secondary" onclick="addToCartFromDetail()">+ Keranjang</button>
+          <button class="btn btn-primary" onclick="buyDirectFromDetail()">Beli Sekarang</button>
+        </div>
+      `;
+      feather.replace();
+      switchView('detail');
+    }
+
+    function selectVariant(type, value, btn) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      if (type === 'shade') selectedShade = value;
+      if (type === 'size') selectedSize = value;
+    }
+
+    // CART OPERATIONS
+    function quickAddToCart(productId) {
+      const p = products.find(prod => prod.id === productId);
+      addToCartItem(p, p.shades[0], p.sizes[0]);
+    }
+
+function buyDirectFromDetail() {
+      addToCartItem(selectedProduct, selectedShade, selectedSize);
+      switchView('cart');
+    }
+
+    function addToCartItem(product, shade, size) {
+      const existing = cart.find(c => c.id === product.id && c.shade === shade && c.size === size);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          shade: shade,
+          size: size,
+          qty: 1,
+          selected: true
+        });
+      }
+      updateCartBadge();
+      showToast('Ditambahkan ke keranjang!');
+    }
+
+    function updateCartBadge() {
+      const totalItems = cart.reduce((acc, c) => acc + c.qty, 0);
+      const badge = document.getElementById('cart-badge');
+      if (totalItems > 0) {
+        badge.innerText = totalItems;
+        badge.style.display = 'block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    // RENDER CART & PEMBAYARAN COD / QRIS (SESUAI GAMBAR REFERENSI 1 & 2)
+    function renderCart() {
+      const cartList = document.getElementById('cart-list');
+      const cartSummary = document.getElementById('cart-summary');
+
+      if (cart.length === 0) {
+        cartList.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-light);">Keranjang belanja Anda kosong.</div>`;
+        cartSummary.innerHTML = '';
+        return;
+      }
+
+      cartList.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+          <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleCartSelect(${index})">
+          <img src="${item.image}">
+          <div class="cart-info">
+            <div class="cart-title">${item.name}</div>
+            <div class="cart-variant">${item.shade} | ${item.size}</div>
+            <div style="font-weight:700; color:var(--accent);">Rp${item.price.toLocaleString()}</div>
+          </div>
+          <div class="qty-cnt">
+            <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+            <span style="font-size:12px; font-weight:600;">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      const subtotal = cart.filter(c => c.selected).reduce((acc, c) => acc + (c.price * c.qty), 0);
+      const shipping = subtotal > 0 ? 5000 : 0;
+      const grandTotal = subtotal + shipping;
+
+      cartSummary.innerHTML = `
+        <h4 style="margin-bottom:8px;">Metode Pembayaran:</h4>
+        <div class="payment-methods">
+          <div class="payment-card ${selectedPaymentMethod === 'COD' ? 'selected' : ''}" onclick="selectPayment('COD')">
+            <i data-feather="dollar-sign"></i>
+            <div>
+              <div style="font-size:12px; font-weight:700;">COD</div>
+              <div style="font-size:10px; color:var(--text-light);">Bayar di Tempat</div>
+            </div>
+          </div>
+          <div class="payment-card ${selectedPaymentMethod === 'QRIS' ? 'selected' : ''}" onclick="selectPayment('QRIS')">
+            <i data-feather="grid"></i>
+            <div>
+              <div style="font-size:12px; font-weight:700;">QRIS</div>
+              <div style="font-size:10px; color:var(--text-light);">Scan Barcode</div>
+            </div>
+          </div>
+        </div>
+
+        ${selectedPaymentMethod === 'QRIS' ? `
+          <div class="qris-box">
+            <div style="font-size:12px; font-weight:600;">Scan QRIS Untuk Membayar:</div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=RARA-COSMETICS-PAYMENT" alt="QRIS Code">
+            <div style="font-size:10px; color:var(--text-light);">Mendukung GoPay, OVO, Dana, ShopeePay, BCA, Mandiri, dll.</div>
+          </div>
+        ` : ''}
+
+        <div class="summary-row" style="margin-top:12px;">
+          <span>Subtotal Produk</span>
+          <span>Rp${subtotal.toLocaleString()}</span>
+        </div>
+        <div class="summary-row">
+          <span>Ongkos Kirim (Flat)</span>
+          <span>Rp${shipping.toLocaleString()}</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total Tagihan:</span>
+          <span>Rp${grandTotal.toLocaleString()}</span>
+        </div>
+        <button class="btn btn-primary" style="margin-top:12px;" ${subtotal === 0 ? 'disabled' : ''} onclick="checkout()">
+          <i data-feather="check-circle"></i> ${selectedPaymentMethod === 'QRIS' ? 'Selesai Pembayaran' : 'Klik Checkout'}
+        </button>
+      `;
+      feather.replace();
+    }
+
+    function selectPayment(method) {
+      selectedPaymentMethod = method;
+      renderCart();
+    }
+
+    function toggleCartSelect(index) {
+      cart[index].selected = !cart[index].selected;
+      renderCart();
+    }
+
+    function changeQty(index, delta) {
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+      }
+      updateCartBadge();
+      renderCart();
+    }
+
+    // CHECKOUT & ORDERS
+    function checkout() {
+      const selectedItems = cart.filter(c => c.selected);
+      if (selectedItems.length === 0) {
+        showToast('Pilih minimal satu produk untuk checkout!');
+        return;
+      }
+
+      const orderId = '#RRC-' + Math.floor(100000 + Math.random() * 900000);
+      const subtotal = selectedItems.reduce((acc, c) => acc + (c.price * c.qty), 0);
+      const grandTotal = subtotal + 5000;
+      const today = new Date();
+      const dateFormatted = `${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`;
+
+      const newOrder = {
+        id: orderId,
+        customerName: currentUser ? currentUser.username : "Pelanggan",
+        customerPhone: currentUser ? currentUser.phone : "-",
+        customerAddress: currentUser ? currentUser.address : "-",
+        items: [...selectedItems],
+        paymentMethod: selectedPaymentMethod,
+        total: grandTotal,
+        status: 'Dikemas',
+        date: dateFormatted
+      };
+
+      orders.unshift(newOrder);
+      cart = cart.filter(c => !c.selected);
+      updateCartBadge();
+
+      document.getElementById('prof-order-count').innerText = orders.length;
+
+      showToast('Pesanan berhasil dibuat!');
+      switchView('orders');
+    }
+
+    function renderOrders() {
+      const container = document.getElementById('orders-list');
+      if (orders.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-light);">Belum ada riwayat pesanan.</div>`;
+        return;
+      }
+
+      container.innerHTML = orders.map(ord => `
+        <div class="summary-card" style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:8px;">
+            <strong>${ord.id} (${ord.paymentMethod})</strong>
+            <span style="color:var(--accent); font-weight:600;">${ord.status}</span>
+          </div>
+
+          <div class="timeline">
+            <div class="timeline-step ${ord.status === 'Dikemas' || ord.status === 'Dikirim' || ord.status === 'Selesai' ? 'active' : ''}">
+              <div class="timeline-icon"><i data-feather="box" style="width:12px;"></i></div>
+              Dikemas
+            </div>
+            <div class="timeline-step ${ord.status === 'Dikirim' || ord.status === 'Selesai' ? 'active' : ''}">
+              <div class="timeline-icon"><i data-feather="truck" style="width:12px;"></i></div>
+              Dikirim
+            </div>
+            <div class="timeline-step ${ord.status === 'Selesai' ? 'active' : ''}">
+              <div class="timeline-icon"><i data-feather="check" style="width:12px;"></i></div>
+              Selesai
+            </div>
+          </div>
+
+          <div style="border-top:1px solid #eee; padding-top:8px;">
+            ${ord.items.map(i => `
+              <div style="font-size:12px; display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span>${i.name} (${i.shade}, ${i.size}) x${i.qty}</span>
+                <span>Rp${(i.price * i.qty).toLocaleString()}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="font-size:13px; font-weight:700; text-align:right; margin-top:8px; color:var(--accent);">
+            Total Tagihan: Rp${ord.total.toLocaleString()}
+          </div>
+        </div>
+      `).join('');
+      feather.replace();
+    }
+
+    // ADMIN FEATURES
+
+    // 1. INPUT BARANG
+    function handleAddProduct(e) {
+      e.preventDefault();
+      const newProd = {
+        id: Date.now(),
+        name: document.getElementById('adm-p-name').value,
+        price: parseInt(document.getElementById('adm-p-price').value),
+        rating: 5.0,
+        sold: 0,
+        image: document.getElementById('adm-p-img').value,
+        desc: "Produk kosmetik kualitas premium dari Rara Cosmetics.",
+        shades: document.getElementById('adm-p-shades').value.split(',').map(s => s.trim()),
+        sizes: document.getElementById('adm-p-sizes').value.split(',').map(s => s.trim()),
+        isBestSeller: false
+      };
+
+      products.unshift(newProd);
+      renderProducts();
+      showToast('Barang berhasil dimasukkan ke katalog!');
+      e.target.reset();
+      switchAdminSection('price');
+    }
+
+    // 2. SUPPLIER MANAGEMENT
+    function handleAddSupplier(e) {
+      e.preventDefault();
+      const name = document.getElementById('supp-name').value;
+      const contact = document.getElementById('supp-contact').value;
+      suppliers.push({ id: Date.now(), name, contact });
+      renderSuppliers();
+      showToast('Supplier berhasil ditambahkan!');
+      e.target.reset();
+    }
+
+    function renderSuppliers() {
+      const container = document.getElementById('supplier-list-container');
+      container.innerHTML = suppliers.map(s => `
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:6px 0; font-size:12px;">
+          <div>
+            <strong>${s.name}</strong>
+            <div style="color:var(--text-light); font-size:11px;">Contact: ${s.contact}</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" style="color:red; width:auto;" onclick="deleteSupplier(${s.id})">Hapus</button>
+        </div>
+      `).join('');
+    }
+
+    function deleteSupplier(id) {
+      suppliers = suppliers.filter(s => s.id !== id);
+      renderSuppliers();
+      showToast('Supplier dihapus.');
+    }
+
+    // 3. VIEW & UBAH HARGA BARANG
+    function renderPriceAdmin() {
+      const container = document.getElementById('admin-price-list');
+      container.innerHTML = products.map((p, idx) => `
+        <div style="display:flex; gap:10px; border-bottom:1px solid #eee; padding:8px 0; align-items:center;">
+          <img src="${p.image}" style="width:40px; height:40px; border-radius:6px; object-fit:cover;">
+          <div style="flex:1;">
+            <div style="font-size:12px; font-weight:600;">${p.name}</div>
+            <div style="display:flex; gap:6px; align-items:center; margin-top:4px;">
+              <span style="font-size:11px;">Rp</span>
+              <input type="number" value="${p.price}" style="width:90px; padding:2px 6px; border:1px solid #ccc; border-radius:4px; font-size:11px;" id="price-input-${p.id}">
+              <button class="btn btn-primary btn-sm" style="width:auto; padding:2px 8px;" onclick="updatePrice(${p.id})">Simpan</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updatePrice(id) {
+      const newPrice = parseInt(document.getElementById(`price-input-${id}`).value);
+      const prod = products.find(p => p.id === id);
+      if (prod && newPrice) {
+        prod.price = newPrice;
+        renderProducts();
+        showToast(`Harga ${prod.name} berhasil diperbarui!`);
+      }
+    }
+
+    // 4. LIHAT PEMBELIAN & KONTROL STATUS PENGIRIMAN (SESUAI REFERENSI GAMBAR 4 & 5)
+    function renderPurchasesAdmin() {
+      const tbody = document.getElementById('purchases-table-body');
+      tbody.innerHTML = orders.map((o, idx) => `
+        <tr>
+          <td>${o.date}</td>
+          <td>
+            <strong>${o.customerName}</strong><br>
+            ${o.customerPhone}<br>
+            <span style="color:var(--text-light);">${o.customerAddress}</span>
+          </td>
+          <td>
+            ${o.items.map(i => `${i.name} (${i.qty})`).join(', ')}
+          </td>
+          <td><strong>Rp ${o.total.toLocaleString()} (${o.paymentMethod})</strong></td>
+          <td><span style="color:var(--accent); font-weight:600;">${o.status}</span></td>
+          <td>
+            <select style="padding:4px; border-radius:6px; border:1px solid #ccc; font-size:11px;" onchange="changeOrderStatus(${idx}, this.value)">
+              <option value="Dikemas" ${o.status === 'Dikemas' ? 'selected' : ''}>Dikemas</option>
+              <option value="Dikirim" ${o.status === 'Dikirim' ? 'selected' : ''}>Dikirim</option>
+              <option value="Selesai" ${o.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+            </select>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function changeOrderStatus(orderIndex, newStatus) {
+      orders[orderIndex].status = newStatus;
+      showToast(`Status pesanan ${orders[orderIndex].id} diubah ke '${newStatus}'`);
+      renderPurchasesAdmin();
+    }
+
+    // 5. LAPORAN PENJUALAN
+    function renderReportContent() {
+      const container = document.getElementById('report-content');
+      const today = new Date();
+      const todayStr = `${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`;
+
+      let filteredOrders = orders;
+      let labelText = "Semua Laporan Penjualan";
+
+      if (activeReportTab === 'daily') {
+        labelText = "Laporan Penjualan Harian";
+        filteredOrders = orders.filter(o => o.date === todayStr);
+      } else if (activeReportTab === 'monthly') {
+        labelText = "Laporan Penjualan Bulanan";
+      } else if (activeReportTab === 'yearly') {
+        labelText = "Laporan Penjualan Tahunan";
+      }
+
+      const totalRevenue = filteredOrders.reduce((acc, o) => acc + o.total, 0);
+
+      container.innerHTML = `
+        <div style="background:var(--bg); padding:12px; border-radius:12px; margin-bottom:12px;">
+          <div style="font-size:11px; color:var(--text-light);">${labelText}</div>
+          <div style="font-size:18px; font-weight:700; color:var(--accent);">Rp${totalRevenue.toLocaleString()}</div>
+          <div style="font-size:11px; color:var(--text); margin-top:2px;">Total ${filteredOrders.length} Transaksi</div>
+        </div>
+
+        <div style="font-size:12px; font-weight:600; margin-bottom:6px;">Rincian Transaksi:</div>
+        ${filteredOrders.length === 0 ? `<div style="font-size:11px; color:var(--text-light); text-align:center; padding:10px;">Tidak ada transaksi pada periode ini.</div>` : 
+          filteredOrders.map(o => `
+            <div style="border-bottom:1px solid #eee; padding:6px 0; font-size:11px;">
+              <div style="display:flex; justify-content:space-between;">
+                <strong>${o.id} - ${o.customerName}</strong>
+                <span>${o.date}</span>
+              </div>
+              <div style="color:var(--accent); font-weight:600;">Rp${o.total.toLocaleString()} (${o.paymentMethod})</div>
+            </div>
+          `).join('')
+        }
+      `;
+    }
+
+    // MODAL & LOGOUT
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function performLogout() {
+      closeModal('logout-modal');
+      currentUser = null;
+      cart = [];
+      updateCartBadge();
+      
+      document.getElementById('form-customer').reset();
+      nextStep(1);
+
+      document.getElementById('onboarding-overlay').style.display = 'flex';
+      switchView('home');
+      showToast('Berhasil logout');
+    }
+  </script>
+</body>
+</html>
